@@ -21,7 +21,7 @@
             { label: '柱状图', value: 'bar' },
             { label: '折线图', value: 'line' }
           ]"
-          @update:value="(value) => {
+          @update:value="(value: any) => {
             updateHandle(item, value)
           }"
         />
