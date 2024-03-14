@@ -30,9 +30,9 @@ export enum ViewModeEnum {
   STEREOSCOPIC = '3D'
 }
 
-export enum ShowHideEnum {
-  SHOW = true,
-  HIDE = false
+export const ShowHideEnum = {
+  SHOW: true,
+  HIDE: false
 }
 
 export enum FeaturesEnum {
