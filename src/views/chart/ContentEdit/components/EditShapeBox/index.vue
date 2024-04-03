@@ -99,23 +99,23 @@ const hide = computed(() => {
   .shape-point {
     z-index: 1;
     position: absolute;
-    width: 7px;
-    height: 7px;
-    border: 3px solid v-bind('themeColor');
+    width: 5px;
+    height: 5px;
+    border: 1px solid v-bind('themeColor');
     border-radius: 5px;
     background-color: #fff;
     transform: translate(-40%, -30%);
     &.t {
-      width: 30px;
+      width: 5px;
       transform: translate(-50%, -50%);
     }
     &.b {
-      width: 30px;
+      width: 5px;
       transform: translate(-50%, -30%);
     }
     &.l,
     &.r {
-      height: 30px;
+      height: 5px;
     }
     &.r {
       transform: translate(-20%, -50%);
@@ -139,7 +139,6 @@ const hide = computed(() => {
       position: absolute;
       width: 100%;
       height: 100%;
-      border-radius: 10px;
     }
 
     .shape-modal-select {
@@ -155,7 +154,7 @@ const hide = computed(() => {
       &.selectActive,
       &.hoverActive {
         border-color: v-bind('themeColor');
-        border-width: 2px;
+        border-width: 1px;
       }
       &.hoverActive {
         border-style: dotted;
