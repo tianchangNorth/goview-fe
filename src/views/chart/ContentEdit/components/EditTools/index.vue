@@ -182,13 +182,13 @@ const btnList: BtnListType[] = [
     key: 'import',
     type: TypeEnum.IMPORTUPLOAD,
     name: '导入',
-    icon: ShareIcon
+    icon: DownloadIcon
   },
   {
     key: 'export',
     type: TypeEnum.BUTTON,
     name: '导出',
-    icon: DownloadIcon,
+    icon: ShareIcon,
     handle: exportHandle
   },
   {
@@ -231,6 +231,8 @@ $asideBottom: 70px;
   border: 1px solid;
   @include fetch-border-color('hover-border-color-shallow');
   &.aside {
+    display: flex;
+    justify-content: center;
     flex-direction: column-reverse;
     height: auto;
     right: 20px;
