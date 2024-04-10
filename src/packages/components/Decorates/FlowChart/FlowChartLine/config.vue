@@ -1,41 +1,17 @@
 <template>
   <CollapseItem name="线条" :expanded="true">
-    <SettingItemBox name="具体">
-      <SettingItem name="水平层级宽度">
-        <n-input-number
-            size="small"
-            v-model:value="optionData.lineLength"
-        ></n-input-number>
-      </SettingItem>
-      <SettingItem name="纵向层级宽度">
-        <n-input-number
-            size="small"
-            v-model:value="optionData.lineColLength"
-        ></n-input-number>
-      </SettingItem>
-    </SettingItemBox>
-
     <SettingItemBox name="折线数量">
       <SettingItem name="向下增加">
-        <n-input-number
-            size="small"
-            v-model:value="optionData.lineNum"
-        ></n-input-number>
+        <n-input-number size="small" :min="0" v-model:value="optionData.lineNum"></n-input-number>
       </SettingItem>
       <SettingItem name="向上增加">
-        <n-input-number
-            size="small"
-            v-model:value="optionData.lineNumUp"
-        ></n-input-number>
+        <n-input-number size="small" :min="0" v-model:value="optionData.lineNumUp"></n-input-number>
       </SettingItem>
     </SettingItemBox>
 
     <SettingItemBox name="折线样式">
       <SettingItem name="折线粗细">
-        <n-input-number
-            size="small"
-            v-model:value="optionData.lineWidth"
-        ></n-input-number>
+        <n-input-number size="small" :min="1" v-model:value="optionData.lineWidth"></n-input-number>
       </SettingItem>
       <SettingItem name="背景条颜色">
         <n-color-picker size="small" :modes="['hex']" v-model:value="optionData.backgroundCol"></n-color-picker>
@@ -44,18 +20,12 @@
         <n-color-picker size="small" :modes="['hex']" v-model:value="optionData.animateCol"></n-color-picker>
       </SettingItem>
     </SettingItemBox>
-
   </CollapseItem>
-
 </template>
 
 <script setup lang="ts">
 import { PropType } from 'vue'
-import {
-  CollapseItem,
-  SettingItemBox,
-  SettingItem
-} from '@/components/Pages/ChartItemSetting'
+import { CollapseItem, SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
 import { option } from './config'
 
 const props = defineProps({
