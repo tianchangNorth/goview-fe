@@ -10,5 +10,5 @@ export const FlowChart04Config: ConfigType = {
     categoryName: ChatCategoryEnumName.FlowChart,
     package: PackagesCategoryEnum.DECORATES,
     chartFrame: ChartFrameEnum.STATIC,
-    image: 'circle.png'
+    image: 'flow-circle.png'
 }

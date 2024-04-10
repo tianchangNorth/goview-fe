@@ -10,5 +10,5 @@ export const FlowChart02Config: ConfigType = {
     categoryName: ChatCategoryEnumName.FlowChart,
     package: PackagesCategoryEnum.DECORATES,
     chartFrame: ChartFrameEnum.STATIC,
-    image: 'wubianxing.png'
+    image: 'flow-wubianxing.png'
 }

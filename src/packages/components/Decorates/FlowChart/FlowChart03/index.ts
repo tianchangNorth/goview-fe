@@ -10,5 +10,5 @@ export const FlowChart03Config: ConfigType = {
     categoryName: ChatCategoryEnumName.FlowChart,
     package: PackagesCategoryEnum.DECORATES,
     chartFrame: ChartFrameEnum.STATIC,
-    image: 'pingxing.png'
+    image: 'flow-pingxing.png'
 }

@@ -10,5 +10,5 @@ export const FlowChart01Config: ConfigType = {
     categoryName: ChatCategoryEnumName.FlowChart,
     package: PackagesCategoryEnum.DECORATES,
     chartFrame: ChartFrameEnum.STATIC,
-    image: 'zhexian.png'
+    image: 'flow-zhexian.png'
 }
