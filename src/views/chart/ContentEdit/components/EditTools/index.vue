@@ -182,13 +182,13 @@ const btnList: BtnListType[] = [
     key: 'import',
     type: TypeEnum.IMPORTUPLOAD,
     name: '导入',
-    icon: DownloadIcon
+    icon: ShareIcon
   },
   {
     key: 'export',
     type: TypeEnum.BUTTON,
     name: '导出',
-    icon: ShareIcon,
+    icon: DownloadIcon,
     handle: exportHandle
   },
   {
