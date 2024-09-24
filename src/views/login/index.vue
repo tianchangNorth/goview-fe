@@ -129,12 +129,6 @@ import { icon } from '@/plugins'
 import { routerTurnByName } from '@/utils'
 import { loginApi } from '@/api/path'
 
-interface FormState {
-  username: string
-  password: string
-}
-
-const { GO_SYSTEM_STORE } = StorageEnum
 const { PersonOutlineIcon, LockClosedOutlineIcon } = icon.ionicons5
 
 const formRef = ref()
@@ -148,7 +142,7 @@ const t = window['$t']
 
 const formInline = reactive({
   username: 'admin',
-  password: 'admin',
+  password: '123456',
 })
 
 const rules = {
