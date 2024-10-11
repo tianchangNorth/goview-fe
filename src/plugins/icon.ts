@@ -59,6 +59,7 @@ import {
   Reload as ReloadIcon,
   ChevronUpOutline as ChevronUpOutlineIcon,
   ChevronDownOutline as ChevronDownOutlineIcon,
+  ChevronForward as ChevronForwardIcon,
   Pulse as PulseIcon,
   Folder as FolderIcon,
   FolderOpen as FolderOpenIcon,
@@ -248,7 +249,9 @@ const ionicons5 = {
   // 分析
   AnalyticsIcon,
   // 飞机
-  AirPlaneOutlineIcon
+  AirPlaneOutlineIcon,
+  // 向右
+  ChevronForwardIcon
 }
 
 const carbon = {
