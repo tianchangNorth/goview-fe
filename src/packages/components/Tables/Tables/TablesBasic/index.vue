@@ -36,6 +36,8 @@
 import { computed, PropType, toRefs, watch, reactive, ref } from 'vue'
 import { CreateComponentType } from '@/packages/index.d'
 import { icon } from '@/plugins'
+import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
+import { useChartDataFetch } from '@/hooks'
 
 const props = defineProps({
   chartConfig: {
@@ -83,6 +85,13 @@ watch(
     deep: true
   }
 )
+
+// setdata 数据监听与更改
+useChartDataFetch(props.chartConfig, useChartEditStore, (newData: any) => {
+  props.chartConfig.option.dataset = newData
+})
+
+
 </script>
 
 <style lang="scss" scoped>
