@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { renderIcon, goDialog, fetchPathByName, routerTurnByPath, setSessionStorage, getLocalStorage } from '@/utils'
+import { renderIcon, goDialog, fetchPathByName, routerTurnByPath, setSessionStorage, getSessionStorage } from '@/utils'
 import { PreviewEnum } from '@/enums/pageEnum'
 import { StorageEnum } from '@/enums/storageEnum'
 import { useRoute } from 'vue-router'
@@ -33,7 +33,7 @@ const previewHandle = () => {
   // id 标识
   const previewId = typeof id === 'string' ? id : id[0]
   const storageInfo = chartEditStore.getStorageInfo()
-  const sessionStorageInfo = getLocalStorage(StorageEnum.GO_CHART_STORAGE_LIST) || []
+  const sessionStorageInfo = getSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST) || []
 
   if (sessionStorageInfo?.length) {
     const repeateIndex = sessionStorageInfo.findIndex((e: { id: string }) => e.id === previewId)
