@@ -60,7 +60,7 @@ import {
   fetchPathByName,
   routerTurnByPath,
   setSessionStorage,
-  getLocalStorage,
+  getSessionStorage,
   httpErrorHandle,
   fetchRouteParamsLocation
 } from '@/utils'
@@ -95,7 +95,7 @@ const previewHandle = () => {
   // id 标识
   const previewId = typeof id === 'string' ? id : id[0]
   const storageInfo = chartEditStore.getStorageInfo()
-  const sessionStorageInfo = getLocalStorage(StorageEnum.GO_CHART_STORAGE_LIST) || []
+  const sessionStorageInfo = getSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST) || []
 
   if (sessionStorageInfo?.length) {
     const repeateIndex = sessionStorageInfo.findIndex((e: { id: string }) => e.id === previewId)
