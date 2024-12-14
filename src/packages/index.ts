@@ -1,4 +1,5 @@
 import { ChartList } from '@/packages/components/Charts/index'
+import { VChartList } from '@/packages/components/VChart/index'
 import { DecorateList } from '@/packages/components/Decorates/index'
 import { InformationList } from '@/packages/components/Informations/index'
 import { TableList } from '@/packages/components/Tables/index'
@@ -19,6 +20,7 @@ const imagesModules: Record<string, { default: string }> = import.meta.glob('../
 // * 所有图表
 export let packagesList: PackagesType = {
   [PackagesCategoryEnum.CHARTS]: ChartList,
+  [PackagesCategoryEnum.VCHART]: VChartList,
   [PackagesCategoryEnum.INFORMATIONS]: InformationList,
   [PackagesCategoryEnum.TABLES]: TableList,
   [PackagesCategoryEnum.DECORATES]: DecorateList,
