@@ -133,13 +133,17 @@ const emit = defineEmits([
 
 const props = defineProps({
   option: {
-    type: Object as PropType<ISpec>,
+    type: Object as PropType<
+      ISpec & {
+        dataset: any
+      }
+    >,
     required: true
   },
   initOptions: {
     type: Object as PropType<
       IInitOption & {
-        deepWatch?: boolean
+        deepWatch?: boolean | number
       }
     >,
     required: false,
@@ -150,27 +154,53 @@ const props = defineProps({
 const vChartRef = ref()
 let chart: IVChart
 
+// 排除 data 监听
 watch(
-  () => props.option,
-  (chartProps: ISpec) => {
+  () => ({
+    ...props.option,
+    data: undefined
+  }),
+  () => {
+    nextTick(() => {
+      createOrUpdateChart(props.option)
+    })
+  },
+  {
+    deep: props.initOptions?.deepWatch || true,
+    immediate: true
+  }
+)
+
+// 单独渲染，非深度监听，处理性能问题
+watch(
+  () => props.option.dataset,
+  () => {
     if (vChartRef.value) {
       nextTick(() => {
-        createOrUpdateChart(chartProps)
+        createOrUpdateChart(props.option)
       })
     }
   },
   {
-    deep: props.initOptions.deepWatch || false
+    deep: false,
+    immediate: false
   }
 )
 
 // 更新
-const createOrUpdateChart = (chartProps: ISpec) => {
+const createOrUpdateChart = (
+  chartProps: ISpec & {
+    dataset: any
+  }
+) => {
   if (vChartRef.value && !chart) {
-    chart = new VChart(chartProps, {
-      dom: vChartRef.value,
-      ...props.initOptions
-    })
+    chart = new VChart(
+      { ...chartProps, data: chartProps.dataset },
+      {
+        dom: vChartRef.value,
+        ...props.initOptions
+      }
+    )
     chart.renderSync()
     return true
   } else if (chart) {
@@ -193,11 +223,6 @@ const refresh = () => {
 const eventHandlers = (eventData: MouseEvent, eventName: string) => {
   if (event.includes(eventName)) emit(eventName as any, eventData)
 }
-
-// 挂载
-onMounted(() => {
-  createOrUpdateChart(props.option)
-})
 
 // 卸载
 onBeforeUnmount(() => {

@@ -1,0 +1,22 @@
+{
+  "values": [
+    { "type": "Nail polish", "country": "Africa", "value": 4229 },
+    { "type": "Nail polish", "country": "EU", "value": 4376 },
+    { "type": "Eyebrow pencil", "country": "Africa", "value": 3932 },
+    { "type": "Eyebrow pencil", "country": "EU", "value": 3987 },
+    { "type": "Rouge", "country": "Africa", "value": 5221 },
+    { "type": "Rouge", "country": "EU", "value": 3574 },
+    { "type": "Lipstick", "country": "Africa", "value": 9256 },
+    { "type": "Lipstick", "country": "EU", "value": 4376 },
+    { "type": "Eyeshadows", "country": "Africa", "value": 3308 },
+    { "type": "Eyeshadows", "country": "EU", "value": 4572 },
+    { "type": "Eyeliner", "country": "Africa", "value": 5432 },
+    { "type": "Eyeliner", "country": "EU", "value": 3417 },
+    { "type": "Foundation", "country": "Africa", "value": 13701 },
+    { "type": "Foundation", "country": "EU", "value": 5231 },
+    { "type": "Lip gloss", "country": "Africa", "value": 4008 },
+    { "type": "Lip gloss", "country": "EU", "value": 4572 },
+    { "type": "Mascara", "country": "Africa", "value": 18712 },
+    { "type": "Mascara", "country": "EU", "value": 6134 }
+  ]
+}

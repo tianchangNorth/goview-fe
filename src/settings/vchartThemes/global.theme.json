@@ -1,0 +1,19 @@
+{
+  "legends": [
+    {
+      "visible": true,
+      "position": "middle",
+      "orient": "bottom",
+      "item": {
+        "visible": true,
+        "align": "left",
+        "label": {
+          "style": {
+            "fontSize": 16,
+            "fill": "#B9B8CE"
+          }
+        }
+      }
+    }
+  ]
+}

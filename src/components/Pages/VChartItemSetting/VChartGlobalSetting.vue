@@ -1,14 +1,15 @@
 <template>
-  <!-- vCharts 全局设置 -->
-  <VChartGlobalSetting :optionData="optionData"></VChartGlobalSetting>
+  <!-- 图例 -->
+  <Legends :optionData="optionData"></Legends>
 </template>
 
 <script setup lang="ts">
 import { PropType, computed } from 'vue'
-import { VChartGlobalSetting } from '@/components/Pages/VChartItemSetting'
+import { CollapseItem, SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
 import { vChartGlobalThemeJsonType } from '@/settings/vchartThemes/index'
+import Legends from './Legends.vue'
 
-defineProps({
+const props = defineProps({
   optionData: {
     type: Object as PropType<vChartGlobalThemeJsonType>,
     required: true
