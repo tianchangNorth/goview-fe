@@ -1,10 +1,12 @@
 <template>
-  <n-flex vertical>
-    <n-card class="theme-item" v-for="item in list" :key="item.value" size="small" @click="selectThemeHandle(item)">
-      {{ item.name }}
-    </n-card>
-  </n-flex>
-  行业模板
+  <n-grid :x-gap="8" :y-gap="8" :cols="2">
+    <n-gi v-for="item in list" :key="item.value">
+      <n-card class="theme-item" size="small" @click="selectThemeHandle(item)">
+        {{ item.name }}
+      </n-card>
+    </n-gi>
+  </n-grid>
+  <div class="go-my-4">行业模板</div>
   <n-grid :x-gap="8" :y-gap="8" :cols="2">
     <n-gi v-for="item in industryList" :key="item.value">
       <n-card class="theme-item-industry" size="small" @click="selectThemeHandle(item)">
@@ -28,17 +30,7 @@ const list = ref<
   }>
 >([
   {
-    name: '明亮',
-    value: 'light',
-    colors: []
-  },
-  {
-    name: '暗黑',
-    value: 'dark',
-    colors: []
-  },
-  {
-    name: '火山蓝',
+    name: '火山蓝（默认）',
     value: 'vScreenVolcanoBlue',
     colors: []
   },
@@ -97,6 +89,16 @@ const industryList = ref<
     colors: string[]
   }>
 >([
+  {
+    name: '明亮（适用白背景）',
+    value: 'light',
+    colors: []
+  },
+  {
+    name: '暗黑（适用黑背景）',
+    value: 'dark',
+    colors: []
+  },
   {
     name: '亮-金融行业',
     value: 'veODesignLightFinance',
@@ -175,9 +177,8 @@ const selectThemeHandle = (item: { name: string; value: keyof typeof themeMap; c
 </script>
 
 <style lang="scss" scoped>
-.theme-item {
-  cursor: pointer;
-}
+.theme-item,
 .theme-item-industry {
+  cursor: pointer;
 }
 </style>

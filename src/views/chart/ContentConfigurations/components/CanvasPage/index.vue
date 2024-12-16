@@ -167,13 +167,13 @@ const selectColorOptions = [
 const globalTabList = [
   {
     key: 'ChartTheme',
-    title: '默认主题颜色',
+    title: '默认主题',
     icon: ColorPaletteIcon,
     render: ChartThemeColor
   },
   {
     key: 'VChartTheme',
-    title: 'VChart主题颜色',
+    title: 'VChart主题',
     icon: ColorPaletteIcon,
     render: VChartThemeColor
   },
