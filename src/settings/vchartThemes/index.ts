@@ -6,4 +6,4 @@ export interface vChartGlobalThemeJsonType extends Partial<ThemeJsonType> {
   [T: string]: any
 }
 
-export const vChartGlobalThemeJson = { ...themeJson, dataset: null, renderer: 'svg' as const }
+export const vChartGlobalThemeJson = { ...themeJson, dataset: null }

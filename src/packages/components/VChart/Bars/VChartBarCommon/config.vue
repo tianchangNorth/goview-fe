@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue'
+import { PropType } from 'vue'
 import { VChartGlobalSetting } from '@/components/Pages/VChartItemSetting'
 import { vChartGlobalThemeJsonType } from '@/settings/vchartThemes/index'
 
