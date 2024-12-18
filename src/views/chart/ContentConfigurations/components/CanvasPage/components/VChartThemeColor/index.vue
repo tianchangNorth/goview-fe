@@ -7,17 +7,15 @@
         size="small"
         @click="selectThemeHandle(item)"
       >
-        <div class="go-flex-items-center">
-          <n-ellipsis style="text-align: left; width: 72px">{{ item.name }} </n-ellipsis>
-          <n-space :wrap-item="false" :size="2">
-            <span
-              class="theme-color-item"
-              v-for="colorItem in item.colors"
-              :key="colorItem"
-              :style="{ backgroundColor: colorItem }"
-            ></span>
-          </n-space>
-        </div>
+        <n-ellipsis class="go-mr-1" style="text-align: left">{{ item.name }} </n-ellipsis>
+        <n-space :wrap="false" :wrap-item="false" :size="2">
+          <span
+            class="theme-color-item"
+            v-for="colorItem in item.colors"
+            :key="colorItem"
+            :style="{ backgroundColor: colorItem }"
+          ></span>
+        </n-space>
       </div>
     </n-gi>
   </n-grid>
@@ -30,17 +28,15 @@
         size="small"
         @click="selectThemeHandle(item)"
       >
-        <div class="go-flex-items-center">
-          <n-ellipsis style="text-align: left; width: 72px">{{ item.name }} </n-ellipsis>
-          <n-space :wrap-item="false" :size="2">
-            <span
-              class="theme-color-item"
-              v-for="colorItem in item.colors"
-              :key="colorItem"
-              :style="{ backgroundColor: colorItem }"
-            ></span>
-          </n-space>
-        </div>
+        <n-ellipsis class="go-mr-2" style="text-align: left">{{ item.name }} </n-ellipsis>
+        <n-space :wrap="false" :wrap-item="false" :size="2">
+          <span
+            class="theme-color-item"
+            v-for="colorItem in item.colors"
+            :key="colorItem"
+            :style="{ backgroundColor: colorItem }"
+          ></span>
+        </n-space>
       </div>
     </n-gi>
   </n-grid>
@@ -227,17 +223,16 @@ $radius: 6px;
 $itemRadius: 2px;
 .theme-item {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   height: 34px;
-  padding: 0 16px;
+  padding: 0 8px;
   overflow: hidden;
   cursor: pointer;
   font-size: 13px;
   border-radius: $radius;
   @include fetch-bg-color('background-color4-shallow');
   &.active {
-    /* border: 1px solid v-bind('themeColor'); */
-    /* border-bottom: 1px solid rgba(0, 0, 0, 0); */
     color: v-bind('themeColor');
   }
   .theme-color-item {
