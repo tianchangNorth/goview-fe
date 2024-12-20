@@ -15,15 +15,7 @@
           </setting-item>
         </setting-item-box>
         <setting-item-box name="项配置">
-          <setting-item name="标题位置">
-            <n-select v-model:value="legendItem.item.align" size="small" :options="legendsConfig.align" />
-          </setting-item>
-          <setting-item name="颜色">
-            <n-color-picker size="small" v-model:value="legendItem.item.label.style.fill"></n-color-picker>
-          </setting-item>
-          <setting-item name="大小">
-            <n-input-number v-model:value="legendItem.item.label.style.fontSize" :min="1" size="small"></n-input-number>
-          </setting-item>
+          <FontStyle :style="legendItem.item.label.style"></FontStyle>
         </setting-item-box>
       </collapse-item>
     </div>
@@ -33,6 +25,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { legendsConfig } from '@/packages/chartConfiguration/vcharts/index'
+import FontStyle from './common/FontStyle.vue'
 import { vChartGlobalThemeJsonType } from '@/settings/vchartThemes/index'
 import { CollapseItem, SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
 

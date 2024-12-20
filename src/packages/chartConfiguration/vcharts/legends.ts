@@ -45,3 +45,55 @@ export const legendsConfig = {
     }
   ]
 }
+
+export const fontStyleConfig = {
+  // 字重
+  fontWeight: [
+    {
+      label: '100',
+      value: 100
+    },
+    {
+      label: '200',
+      value: 200
+    },
+    {
+      label: '300',
+      value: 300
+    },
+    {
+      label: '400',
+      value: 400
+    },
+    {
+      label: '500',
+      value: 500
+    },
+    {
+      label: '600',
+      value: 600
+    },
+    {
+      label: '正常',
+      value: "normal"
+    },
+    {
+      label: '加粗',
+      value: "bold"
+    }
+  ],
+  fontFamily: [
+    {
+      label: '宋体',
+      value: 'SimSun'
+    },
+    {
+      label: '黑体',
+      value: 'SimHei'
+    },
+    {
+      label: '楷体',
+      value: '楷体'
+    }
+  ]
+}

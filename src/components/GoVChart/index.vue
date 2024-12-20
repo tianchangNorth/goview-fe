@@ -10,6 +10,8 @@
 <script setup lang="ts">
 import { ref, PropType, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { VChart, type IVChart, type IInitOption, type ISpec } from '@visactor/vchart'
+import { transformHandler } from './transformProps'
+import { IOption } from '@/packages/components/VChart/index.d'
 
 // 事件说明 v1.13.0 https://www.visactor.io/vchart/api/API/event
 const event = [
@@ -189,13 +191,14 @@ watch(
 
 // 更新
 const createOrUpdateChart = (
-  chartProps: ISpec & {
+  chartProps: IOption & {
     dataset: any
   }
 ) => {
   if (vChartRef.value && !chart) {
+    const spec = transformHandler[chartProps.category](chartProps)
     chart = new VChart(
-      { ...chartProps, data: chartProps.dataset },
+      { ...spec, data: chartProps.dataset },
       {
         dom: vChartRef.value,
         ...props.initOptions
@@ -204,8 +207,8 @@ const createOrUpdateChart = (
     chart.renderSync()
     return true
   } else if (chart) {
-    chart.updateSpec(chartProps)
-    chart.renderSync()
+    const spec = transformHandler[chartProps.category](chartProps)
+    chart.updateSpec({ ...spec, data: chartProps.dataset })
     return true
   }
   return false
