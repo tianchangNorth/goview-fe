@@ -49,10 +49,6 @@ const {
   dataset
 } = toRefs(props.chartConfig.option)
 
-//const option = shallowReactive({
-//  dataset: configOption.dataset
-//})
-
 // 手动更新
 watch(
   () => props.chartConfig.option.dataset,
