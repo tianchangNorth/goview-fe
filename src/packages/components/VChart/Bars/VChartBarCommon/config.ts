@@ -14,7 +14,7 @@ export const option: IBarOption & { dataset?: any } = {
   dataset: data,
   stack: true,
   xField: ['year', 'type'],
-  yField: 'value',
+  yField: ['value'],
   seriesField: 'type',
   // 业务配置（后续会被转换为图表spec)
   category: VChartBarCommonConfig.category,

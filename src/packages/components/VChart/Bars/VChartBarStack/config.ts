@@ -12,9 +12,9 @@ export const option: IBarOption & { dataset?: any } = {
   // 图表配置
   type: 'bar',
   dataset: data,
-  xField: 'State',
-  yField: 'Population',
-  seriesField: 'Age',
+  xField: ['type'],
+  yField: ['value'],
+  seriesField: 'year',
   stack: true,
   // 业务配置（后续会被转换为图表spec)
   category: VChartBarStackConfig.category,

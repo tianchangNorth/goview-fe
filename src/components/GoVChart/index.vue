@@ -2,13 +2,13 @@
   <div
     ref="vChartRef"
     v-on="{
-      ...Object.fromEntries(event.map(eventName => [eventName, (eventData: MouseEvent) => eventHandlers(eventData, eventName)]))
+      ...Object.fromEntries(event.map((eventName: string) => [eventName, (eventData: MouseEvent) => eventHandlers(eventData, eventName)]))
     }"
   ></div>
 </template>
 
 <script setup lang="ts">
-import { ref, PropType, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, PropType, watch, onBeforeUnmount, nextTick, toRaw } from 'vue'
 import { VChart, type IVChart, type IInitOption, type ISpec } from '@visactor/vchart'
 import { transformHandler } from './transformProps'
 import { IOption } from '@/packages/components/VChart/index.d'
@@ -136,7 +136,7 @@ const emit = defineEmits([
 const props = defineProps({
   option: {
     type: Object as PropType<
-      ISpec & {
+      IOption & {
         dataset: any
       }
     >,
@@ -160,7 +160,7 @@ let chart: IVChart
 watch(
   () => ({
     ...props.option,
-    data: undefined
+    dataset: undefined
   }),
   () => {
     nextTick(() => {
@@ -170,22 +170,6 @@ watch(
   {
     deep: props.initOptions?.deepWatch || true,
     immediate: true
-  }
-)
-
-// 单独渲染，非深度监听，处理性能问题
-watch(
-  () => props.option.dataset,
-  () => {
-    if (vChartRef.value) {
-      nextTick(() => {
-        createOrUpdateChart(props.option)
-      })
-    }
-  },
-  {
-    deep: false,
-    immediate: false
   }
 )
 
@@ -208,7 +192,7 @@ const createOrUpdateChart = (
     return true
   } else if (chart) {
     const spec = transformHandler[chartProps.category](chartProps)
-    chart.updateSpec({ ...spec, data: chartProps.dataset })
+    chart.updateSpec({ ...spec, data: toRaw(chartProps.dataset), dataset: undefined })
     return true
   }
   return false
@@ -217,7 +201,6 @@ const createOrUpdateChart = (
 // 刷新
 const refresh = () => {
   if (chart) {
-    chart.release()
     chart.renderSync()
   }
 }
