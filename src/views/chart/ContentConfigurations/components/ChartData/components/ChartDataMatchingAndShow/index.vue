@@ -235,8 +235,6 @@ const initFieldListHandle = () => {
         }
         if (item.mapping === undefined) {
           item.result = DataResultEnum.FAILURE
-        } else if (!isArray(item.mapping)) {
-          item.mapping = [item.mapping]
         }
         fieldList.value.push(item)
       }
