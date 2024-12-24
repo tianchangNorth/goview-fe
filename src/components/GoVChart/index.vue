@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, PropType, watch, onBeforeUnmount, nextTick, toRaw } from 'vue'
+import { ref, PropType, watch, onBeforeUnmount, nextTick, toRaw, toRefs } from 'vue'
 import { VChart, type IVChart, type IInitOption, type ISpec } from '@visactor/vchart'
 import { transformHandler } from './transformProps'
 import { IOption } from '@/packages/components/VChart/index.d'
@@ -156,11 +156,13 @@ const props = defineProps({
 const vChartRef = ref()
 let chart: IVChart
 
+// 解构 props.option，排除 dataset
+const { dataset, ...restOfOption } = toRefs(props.option)
+
 // 排除 data 监听
 watch(
   () => ({
-    ...props.option,
-    dataset: undefined
+    ...restOfOption
   }),
   () => {
     nextTick(() => {
@@ -170,6 +172,17 @@ watch(
   {
     deep: props.initOptions?.deepWatch || true,
     immediate: true
+  }
+)
+watch(
+  () => dataset.value,
+  () => {
+    nextTick(() => {
+      createOrUpdateChart(props.option)
+    })
+  },
+  {
+    deep: false
   }
 )
 

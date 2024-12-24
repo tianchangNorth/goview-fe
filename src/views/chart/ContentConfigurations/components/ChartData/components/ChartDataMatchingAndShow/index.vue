@@ -221,13 +221,11 @@ const dimensionsAndSourceHandle = () => {
 const initFieldListHandle = () => {
   if (targetData.value?.option) {
     fieldList.value = []
-    // 所有名称，找到其中中 Field 结尾 的 key 和值，如果值不是数组结构，则先转换
+    // 所有名称，找到其中中 Field 结尾 的 key 和值
     for (const key in targetData.value.option) {
       if (key.endsWith('Field')) {
         const value = targetData.value.option[key]
-        if (!isArray(value)) {
-          targetData.value.option[key] = [value]
-        }
+        targetData.value.option[key] = value
         const item = {
           field: key,
           mapping: value,
