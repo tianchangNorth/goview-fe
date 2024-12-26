@@ -49,16 +49,12 @@ const {
   dataset
 } = toRefs(props.chartConfig.option)
 
-const option = shallowReactive({
-  dataset: configOption.dataset
-})
-
 // 手动更新
 watch(
   () => props.chartConfig.option.dataset,
   (newData: any) => {
     try {
-      option.dataset = toNumber(newData, 2)
+      dataset.value = toNumber(newData, 2)
     } catch (error) {
       console.log(error)
     }
@@ -69,6 +65,6 @@ watch(
 )
 // 预览更新
 useChartDataFetch(props.chartConfig, useChartEditStore, (newData: number) => {
-  option.dataset = toNumber(newData, 2)
+  dataset.value = toNumber(newData, 2)
 })
 </script>
