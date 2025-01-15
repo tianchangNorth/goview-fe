@@ -28,7 +28,7 @@ export const option = {
       type: 'shadow'
     }
   },
-xAxis: {
+  xAxis: {
     show: true,
     type: 'category'
   },

@@ -1,4 +1,5 @@
 import test from './test.mock'
+import vchart from './vchart.mock'
 import { MockMethod } from 'vite-plugin-mock'
 import { RequestHttpEnum } from '@/enums/httpEnum'
 
@@ -21,6 +22,8 @@ export const treemapUrl = '/mock/treemap'
 export const threeEarth01Url = '/mock/threeEarth01Data'
 export const sankeyUrl = '/mock/sankey'
 export const graphUrl = '/mock/graphData'
+
+export const vchartBarDataUrl = '/mock/vchart/barDataUrl'
 
 const mockObject: MockMethod[] = [
   {
@@ -115,6 +118,11 @@ const mockObject: MockMethod[] = [
     method: RequestHttpEnum.GET,
     response: () => test.graphData
   },
+  {
+    url: vchartBarDataUrl,
+    method: RequestHttpEnum.GET,
+    response: () => vchart.bar
+  }
 ]
 
 export default mockObject

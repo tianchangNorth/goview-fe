@@ -1,6 +1,7 @@
 <template>
   <n-timeline class="go-chart-configurations-timeline">
-    <n-timeline-item v-show="isCharts && dimensionsAndSource" type="info" :title="TimelineTitleEnum.MAPPING">
+    <!-- 处理 echarts 的数据映射 -->
+    <n-timeline-item v-if="isCharts && dimensionsAndSource" type="info" :title="TimelineTitleEnum.MAPPING">
       <n-table striped>
         <thead>
           <tr>
@@ -21,6 +22,47 @@
                 <n-text>匹配{{ item.result === 1 ? '成功' : '失败' }}</n-text>
               </n-space>
             </td>
+          </tr>
+        </tbody>
+      </n-table>
+    </n-timeline-item>
+    <!-- 处理 vcharts 的数据映射 -->
+    <n-timeline-item v-if="isVChart" type="info" :title="TimelineTitleEnum.MAPPING">
+      <n-table striped>
+        <thead>
+          <tr>
+            <th v-for="item in vchartTableTitle" :key="item">{{ item }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in fieldList" :key="item.field">
+            <td>
+              <n-ellipsis style="width: 70px; max-width: 240px">
+                {{ item.field }}
+              </n-ellipsis>
+            </td>
+            <td v-if="isArray(item.mapping)">
+              <n-space :size="4" vertical>
+                <n-input
+                  v-for="(mappingItem, index) in item.mapping"
+                  :key="index"
+                  v-model:value="item.mapping[index]"
+                  type="tiny"
+                  size="small"
+                  placeholder="输入字段"
+                  @change="() => (item.result = matchingHandle(item.mapping[index]))"
+                />
+              </n-space>
+            </td>
+            <td v-else>
+              <n-input v-model:value="item.mapping" type="text" size="small" placeholder="小" />
+            </td>
+            <!-- <td>
+              <n-space style="width: 70px" :size="4">
+                <n-badge dot :type="item.result === 1 ? 'success' : 'error'"></n-badge>
+                <n-text>匹配{{ item.result === 1 ? '成功' : '失败' }}</n-text>
+              </n-space>
+            </td> -->
           </tr>
         </tbody>
       </n-table>
@@ -66,7 +108,7 @@
                   <help-outline-icon></help-outline-icon>
                 </n-icon>
               </template>
-              <n-text depth="3">点击【下载】查看完整数据</n-text>
+              <span>点击【下载】查看完整数据</span>
             </n-tooltip>
           </div>
         </n-space>
@@ -87,11 +129,10 @@ import { DataResultEnum, TimelineTitleEnum } from '../../index.d'
 import { ChartDataMonacoEditor } from '../ChartDataMonacoEditor'
 import { useFile } from '../../hooks/useFile.hooks'
 import { useTargetData } from '../../../hooks/useTargetData.hook'
-import isObject from 'lodash/isObject'
 import { toString, isArray } from '@/utils'
 
 const { targetData } = useTargetData()
-const props = defineProps({
+defineProps({
   show: {
     type: Boolean,
     required: false
@@ -104,6 +145,7 @@ const props = defineProps({
 
 // 表格标题
 const tableTitle = ['字段', '映射', '状态']
+const vchartTableTitle = ['字段', '接口映射字段']
 
 const { HelpOutlineIcon } = icon.ionicons5
 const { DocumentAddIcon, DocumentDownloadIcon } = icon.carbon
@@ -112,6 +154,15 @@ const source = ref()
 const dimensions = ref()
 const dimensionsAndSource = ref()
 const noData = ref(false)
+
+// 映射列表, 注意内部的mapping是响应式的，上方需要修改
+const fieldList = ref<
+  Array<{
+    field: string
+    mapping: string[]
+    result: DataResultEnum
+  }>
+>([])
 
 const { uploadFileListRef, customRequest, beforeUpload, download } = useFile(targetData)
 
@@ -123,6 +174,10 @@ const filterShow = computed(() => {
 // 是支持 dataset 的图表类型
 const isCharts = computed(() => {
   return targetData.value.chartConfig.chartFrame === ChartFrameEnum.ECHARTS
+})
+// 是支持 vchart 的图表类型
+const isVChart = computed(() => {
+  return targetData.value.chartConfig.chartFrame === ChartFrameEnum.VCHART
 })
 
 // 处理映射列表状态结果
@@ -162,6 +217,29 @@ const dimensionsAndSourceHandle = () => {
   }
 }
 
+// 处理 vchart 映射列表
+const initFieldListHandle = () => {
+  if (targetData.value?.option) {
+    fieldList.value = []
+    // 所有名称，找到其中中 Field 结尾 的 key 和值
+    for (const key in targetData.value.option) {
+      if (key.endsWith('Field')) {
+        const value = targetData.value.option[key]
+        targetData.value.option[key] = value
+        const item = {
+          field: key,
+          mapping: value,
+          result: DataResultEnum.SUCCESS
+        }
+        if (item.mapping === undefined) {
+          item.result = DataResultEnum.FAILURE
+        }
+        fieldList.value.push(item)
+      }
+    }
+  }
+}
+
 watch(
   () => targetData.value?.option?.dataset,
   (
@@ -178,9 +256,13 @@ watch(
         dimensions.value = newData.dimensions
         dimensionsAndSource.value = dimensionsAndSourceHandle()
       }
+    } else if (newData && targetData?.value?.chartConfig?.chartFrame === ChartFrameEnum.VCHART) {
+      source.value = newData
+      initFieldListHandle()
     } else if (newData !== undefined && newData !== null) {
       dimensionsAndSource.value = null
       source.value = newData
+      fieldList.value = []
     } else {
       noData.value = true
       source.value = '此组件无数据源'

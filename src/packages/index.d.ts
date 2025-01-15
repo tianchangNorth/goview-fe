@@ -1,6 +1,7 @@
 import { BaseEvent, EventLife, InteractEvents, InteractEventOn, InteractActionsType } from '@/enums/eventEnum'
 import type { GlobalThemeJsonType } from '@/settings/chartThemes/index'
 import type { RequestConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
+import type { ChatCategoryEnum, ChatCategoryEnumName } from '@/packages/components/VChart/index.d'
 
 export enum ChartFrameEnum {
   // 支持 dataset 的 echarts 框架
@@ -26,11 +27,11 @@ export type ConfigType = {
   // 标题
   title: string
   // 分类
-  category: string
+  category: ChatCategoryEnum
   // 分类名称
-  categoryName: string
+  categoryName: ChatCategoryEnumName
   // 所属包
-  package: string
+  package: PackagesCategoryEnum
   // 归类
   chartFrame?: ChartFrameEnum
   // 预览图

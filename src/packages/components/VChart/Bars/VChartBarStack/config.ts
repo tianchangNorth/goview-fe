@@ -1,5 +1,5 @@
 import { PublicConfigClass } from '@/packages/public'
-import { VChartBarCommonConfig } from './index'
+import { VChartBarStackConfig } from './index'
 import { CreateComponentType } from '@/packages/index.d'
 import { vChartOptionPrefixHandle } from '@/packages/public/vChart'
 import data from './data.json'
@@ -12,12 +12,12 @@ export const option: IBarOption & { dataset?: any } = {
   // 图表配置
   type: 'bar',
   dataset: data,
-  stack: true,
-  xField: ['year', 'type'],
+  xField: ['type'],
   yField: ['value'],
-  seriesField: 'type',
+  seriesField: 'year',
+  stack: true,
   // 业务配置（后续会被转换为图表spec)
-  category: VChartBarCommonConfig.category,
+  category: VChartBarStackConfig.category,
   xAxis: {
     name: 'x轴',
     ...axisThemeJson,
@@ -40,8 +40,8 @@ export const option: IBarOption & { dataset?: any } = {
 }
 
 export default class Config extends PublicConfigClass implements CreateComponentType {
-  public key = VChartBarCommonConfig.key
-  public chartConfig = cloneDeep(VChartBarCommonConfig)
+  public key = VChartBarStackConfig.key
+  public chartConfig = cloneDeep(VChartBarStackConfig)
   // 图表配置项
   public option = vChartOptionPrefixHandle(option, includes)
 }

@@ -2,14 +2,16 @@
   <div
     ref="vChartRef"
     v-on="{
-      ...Object.fromEntries(event.map(eventName => [eventName, (eventData: MouseEvent) => eventHandlers(eventData, eventName)]))
+      ...Object.fromEntries(event.map((eventName: string) => [eventName, (eventData: MouseEvent) => eventHandlers(eventData, eventName)]))
     }"
   ></div>
 </template>
 
 <script setup lang="ts">
-import { ref, PropType, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, PropType, watch, onBeforeUnmount, nextTick, toRaw, toRefs } from 'vue'
 import { VChart, type IVChart, type IInitOption, type ISpec } from '@visactor/vchart'
+import { transformHandler } from './transformProps'
+import { IOption } from '@/packages/components/VChart/index.d'
 
 // 事件说明 v1.13.0 https://www.visactor.io/vchart/api/API/event
 const event = [
@@ -133,13 +135,17 @@ const emit = defineEmits([
 
 const props = defineProps({
   option: {
-    type: Object as PropType<ISpec>,
+    type: Object as PropType<
+      IOption & {
+        dataset: any
+      }
+    >,
     required: true
   },
   initOptions: {
     type: Object as PropType<
       IInitOption & {
-        deepWatch?: boolean
+        deepWatch?: boolean | number
       }
     >,
     required: false,
@@ -150,32 +156,56 @@ const props = defineProps({
 const vChartRef = ref()
 let chart: IVChart
 
+// 解构 props.option，排除 dataset
+const { dataset, ...restOfOption } = toRefs(props.option)
+
+// 排除 data 监听
 watch(
-  () => props.option,
-  (chartProps: ISpec) => {
-    if (vChartRef.value) {
-      nextTick(() => {
-        createOrUpdateChart(chartProps)
-      })
-    }
+  () => ({
+    ...restOfOption
+  }),
+  () => {
+    nextTick(() => {
+      createOrUpdateChart(props.option)
+    })
   },
   {
-    deep: props.initOptions.deepWatch || false
+    deep: props.initOptions?.deepWatch || true,
+    immediate: true
+  }
+)
+watch(
+  () => dataset.value,
+  () => {
+    nextTick(() => {
+      createOrUpdateChart(props.option)
+    })
+  },
+  {
+    deep: false
   }
 )
 
 // 更新
-const createOrUpdateChart = (chartProps: ISpec) => {
+const createOrUpdateChart = (
+  chartProps: IOption & {
+    dataset: any
+  }
+) => {
   if (vChartRef.value && !chart) {
-    chart = new VChart(chartProps, {
-      dom: vChartRef.value,
-      ...props.initOptions
-    })
+    const spec = transformHandler[chartProps.category](chartProps)
+    chart = new VChart(
+      { ...spec, data: chartProps.dataset },
+      {
+        dom: vChartRef.value,
+        ...props.initOptions
+      }
+    )
     chart.renderSync()
     return true
   } else if (chart) {
-    chart.updateSpec(chartProps)
-    chart.renderSync()
+    const spec = transformHandler[chartProps.category](chartProps)
+    chart.updateSpec({ ...spec, data: toRaw(chartProps.dataset), dataset: undefined })
     return true
   }
   return false
@@ -184,7 +214,6 @@ const createOrUpdateChart = (chartProps: ISpec) => {
 // 刷新
 const refresh = () => {
   if (chart) {
-    chart.release()
     chart.renderSync()
   }
 }
@@ -193,11 +222,6 @@ const refresh = () => {
 const eventHandlers = (eventData: MouseEvent, eventName: string) => {
   if (event.includes(eventName)) emit(eventName as any, eventData)
 }
-
-// 挂载
-onMounted(() => {
-  createOrUpdateChart(props.option)
-})
 
 // 卸载
 onBeforeUnmount(() => {

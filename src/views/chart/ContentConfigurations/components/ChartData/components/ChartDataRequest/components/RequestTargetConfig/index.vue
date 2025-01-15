@@ -82,7 +82,8 @@ import {
   wordCloudUrl,
   treemapUrl,
   threeEarth01Url,
-  sankeyUrl
+  sankeyUrl,
+  vchartBarDataUrl
 } from '@/api/mock'
 
 const props = defineProps({
@@ -150,7 +151,10 @@ const apiList = [
   },
   {
     value: `【关系图】${graphUrl}`
-  }
+  },
+  {
+    value: `【vchart 柱状图】${vchartBarDataUrl}`
+  },
 ]
 </script>
 
