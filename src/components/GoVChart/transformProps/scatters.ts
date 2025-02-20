@@ -2,7 +2,6 @@ import { cloneDeep } from "lodash"
 
 export default (chartProps: any) => {
   const spec = cloneDeep(chartProps)
-  delete spec.category
 
   // tooltip
   const keyFill = spec.tooltip.style.keyLabel.fill
@@ -21,7 +20,9 @@ export default (chartProps: any) => {
   spec.axes = [{
     orient: 'bottom',
     ...restXAxisProps,
-    // paddingInner: 0.5
+    label: {
+      formatMethod: (value: string) => Number(value).toFixed(2)
+    }
   }, {
     orient: 'left',
     ...restYAxisProps
@@ -29,6 +30,6 @@ export default (chartProps: any) => {
 
   delete spec.xAxis
   delete spec.yAxis
-  // console.log('spec-bar-transform', spec)
+  // console.log('spec-scatter-transform', spec)
   return spec
 }

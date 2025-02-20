@@ -1,8 +1,8 @@
+import { Datum } from "@visactor/vchart/esm/typings"
 import { cloneDeep } from "lodash"
 
 export default (chartProps: any) => {
   const spec = cloneDeep(chartProps)
-  delete spec.category
 
   // tooltip
   const keyFill = spec.tooltip.style.keyLabel.fill
@@ -15,20 +15,7 @@ export default (chartProps: any) => {
   spec.tooltip.style.valueLabel.fontColor = valueFill
   spec.tooltip.style.titleLabel.fontColor = titleFill
 
-  // axis
-  const { name: xAxisName, ...restXAxisProps } = chartProps.xAxis
-  const { name: yAxisName, ...restYAxisProps } = chartProps.yAxis
-  spec.axes = [{
-    orient: 'bottom',
-    ...restXAxisProps,
-    // paddingInner: 0.5
-  }, {
-    orient: 'left',
-    ...restYAxisProps
-  }]
 
-  delete spec.xAxis
-  delete spec.yAxis
-  // console.log('spec-bar-transform', spec)
+  // console.log('spec-word-cloud-transform', spec)
   return spec
 }
