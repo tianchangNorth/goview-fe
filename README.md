@@ -36,6 +36,13 @@ GoView 是一个高效的拖拽式低代码数据可视化开发平台，将图�
 
 - 封装：项目进行了详细的工具类封装如：路由、存储、加/解密、文件处理、主题、NaiveUI 全局方法、组件等
 
+- 可视化：基于开源图表库[ECharts](https://echarts.apache.org/zh/index.html) 和 [VChart](https://www.visactor.io/vchart) 编写，具有丰富的图表类型和适配大屏的主题效果；
+
+- 入选 NaiveUI 社区精选资源推荐：[查看 NaiveUI 推荐列表](https://www.naiveui.com/zh-CN/light/docs/community)
+
+说明文档：
+![说明文档](readme/go-view-doc.png)
+
 工作台：
 ![项目截图](readme/go-view-canvas.png)
 
