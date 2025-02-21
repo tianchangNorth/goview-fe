@@ -6,7 +6,7 @@ export default {
   my: '我的',
   new_project: '新项目',
   all_project: '全部项目',
-  my_templete: '我的模板',
+  my_template: '我的模板',
   template_market: '模板市场',
 
   // items 
