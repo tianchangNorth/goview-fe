@@ -54,7 +54,7 @@ export const menuOptionsInit = () => {
                       name: PageEnum.BASE_HOME_TEMPLATE_NAME,
                     },
                   },
-                  { default: () => t('project.my_templete') }
+                  { default: () => t('project.my_template') }
                 ),
               key: PageEnum.BASE_HOME_TEMPLATE_NAME,
               icon: renderIcon(ObjectStorageIcon),
