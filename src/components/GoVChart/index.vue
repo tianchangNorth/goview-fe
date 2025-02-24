@@ -9,9 +9,13 @@
 
 <script setup lang="ts">
 import { ref, PropType, watch, onBeforeUnmount, nextTick, toRaw, toRefs } from 'vue'
-import { VChart, type IVChart, type IInitOption, type ISpec } from '@visactor/vchart'
+import { VChart, type IVChart, type IInitOption } from '@visactor/vchart'
 import { transformHandler } from './transformProps'
 import { IOption } from '@/packages/components/VChart/index.d'
+import { registerChartsAndComponents } from './register'
+
+// VChart按需加载: 注册图表及组件
+registerChartsAndComponents()
 
 // 事件说明 v1.13.0 https://www.visactor.io/vchart/api/API/event
 const event = [
