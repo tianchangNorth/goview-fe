@@ -37,6 +37,7 @@ import { useStore } from './hooks/useStore.hook'
 import { PreviewScaleEnum } from '@/enums/styleEnum'
 import type { ChartEditStorageType } from './index.d'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
+import { useInitVChartsTheme } from '@/hooks'
 
 // const localStorageInfo: ChartEditStorageType = getSessionStorageInfo() as ChartEditStorageType
 
@@ -64,6 +65,9 @@ const { show } = useComInstall(chartEditStore)
 
 // 开启键盘监听
 keyRecordHandle()
+
+// 处理全局的 vChart 主题
+useInitVChartsTheme(chartEditStore)
 </script>
 
 <style lang="scss" scoped>

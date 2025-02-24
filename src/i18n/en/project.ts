@@ -7,7 +7,7 @@ export default {
   my: 'My',
   new_project: 'New Project',
   all_project: 'All Project',
-  my_templete: 'My Templete',
+  my_template: 'My Template',
   template_market: 'Template Market',
 
   // items 

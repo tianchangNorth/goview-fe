@@ -154,6 +154,7 @@ const switchSelectColorLoading = ref(false)
 const selectColorValue = ref(0)
 
 const ChartThemeColor = loadAsyncComponent(() => import('./components/ChartThemeColor/index.vue'))
+const VChartThemeColor = loadAsyncComponent(() => import('./components/VChartThemeColor/index.vue'))
 
 // 默认应用类型
 const selectColorOptions = [
@@ -170,10 +171,16 @@ const selectColorOptions = [
 const globalTabList = [
   {
     key: 'ChartTheme',
-    title: '主题颜色',
+    title: '默认主题',
     icon: ColorPaletteIcon,
     render: ChartThemeColor
-  }
+  },
+  {
+    key: 'VChartTheme',
+    title: 'VChart主题',
+    icon: ColorPaletteIcon,
+    render: VChartThemeColor
+  },
 ]
 
 const previewTypeList = [

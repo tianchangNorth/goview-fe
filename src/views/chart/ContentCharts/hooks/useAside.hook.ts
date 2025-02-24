@@ -7,7 +7,7 @@ import { usePackagesStore } from '@/store/modules/packagesStore/packagesStore'
 import { ChartLayoutStoreEnum } from '@/store/modules/chartLayoutStore/chartLayoutStore.d'
 // 图标
 const { AirPlaneOutlineIcon, ImageIcon, BarChartIcon } = icon.ionicons5
-const { TableSplitIcon, RoadmapIcon, SpellCheckIcon, GraphicalDataFlowIcon } = icon.carbon
+const { TableSplitIcon, RoadmapIcon, ChartPieIcon, SpellCheckIcon, GraphicalDataFlowIcon } = icon.carbon
 
 // 图表
 export type MenuOptionsType = {
@@ -21,6 +21,10 @@ const packagesListObj = {
   [PackagesCategoryEnum.CHARTS]: {
     icon: renderIcon(RoadmapIcon),
     label: PackagesCategoryName.CHARTS
+  },
+  [PackagesCategoryEnum.VCHART]: {
+    icon: renderIcon(ChartPieIcon),
+    label: PackagesCategoryName.VCHART
   },
   [PackagesCategoryEnum.INFORMATIONS]: {
     icon: renderIcon(SpellCheckIcon),

@@ -132,6 +132,8 @@ export const useChartEditStore = defineStore({
       chartCustomThemeColorInfo: undefined,
       // 全局配置
       chartThemeSetting: globalThemeJson,
+      // vChart 主题
+      vChartThemeName: 'vScreenVolcanoBlue',
       // 适配方式
       previewScaleType: previewScaleType
     },

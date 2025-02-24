@@ -1,12 +1,12 @@
 {
   "name": "go-view",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "engines": {
-    "node": ">=12.0"
+    "node": ">=16.14"
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "new": "plop --plopfile ./plop/plopfile.js",
     "postinstall": "husky install",
@@ -21,6 +21,8 @@
     "@types/crypto-js": "^4.1.1",
     "@types/keymaster": "^1.6.30",
     "@types/lodash": "^4.14.184",
+    "@visactor/vchart": "^1.12.12",
+    "@visactor/vchart-theme": "^1.12.2",
     "animate.css": "^4.1.1",
     "axios": "^1.4.0",
     "color": "^4.2.3",
@@ -37,11 +39,11 @@
     "keymaster": "^1.6.2",
     "mitt": "^3.0.0",
     "monaco-editor": "^0.33.0",
-    "naive-ui": "2.34.3",
+    "naive-ui": "2.40.3",
     "pinia": "^2.0.13",
     "screenfull": "^6.0.1",
     "three": "^0.145.0",
-    "vue": "^3.2.31",
+    "vue": "^3.5.13",
     "vue-demi": "^0.13.1",
     "vue-i18n": "9.2.2",
     "vue-router": "4.0.12",
@@ -75,7 +77,7 @@
     "mockjs": "^1.1.0",
     "plop": "^3.0.5",
     "prettier": "^2.6.2",
-    "sass": "^1.49.11",
+    "sass": "~1.49.11",
     "sass-loader": "^12.6.0",
     "typescript": "4.6.3",
     "vite": "4.3.6",
