@@ -10,7 +10,11 @@
         <div class="rank" :style="`color: ${color};font-size: ${indexFontSize}px`">No.{{ item.ranking }}</div>
         <div class="info-name" :style="`font-size: ${leftFontSize}px`" v-html="item.name" />
         <div class="ranking-value" :style="`color: ${textColor};font-size: ${rightFontSize}px`">
-          {{ status.mergedConfig.valueFormatter ? status.mergedConfig.valueFormatter(item) : item.value }}
+          {{
+            typeof status.mergedConfig.valueFormatter === 'function'
+              ? status.mergedConfig.valueFormatter(item)
+              : item.value
+          }}
           {{ unit }}
         </div>
       </div>
@@ -62,7 +66,8 @@ const status = reactive({
 const calcRowsData = () => {
   let { dataset, rowNum, sort } = status.mergedConfig
   // @ts-ignore
-  sort &&dataset.sort(({ value: a }, { value: b  } )  => {
+  sort &&
+    dataset.sort(({ value: a }, { value: b }) => {
       if (a > b) return -1
       if (a < b) return 1
       if (a === b) return 0
@@ -137,7 +142,7 @@ const onRestart = async () => {
     calcRowsData()
     let flag = true
     if (dataset.length <= rowNum) {
-      flag=false
+      flag = false
     }
     calcHeights(flag)
     animation(flag)
