@@ -1,10 +1,13 @@
 import { BaseEvent, EventLife, InteractEvents, InteractEventOn, InteractActionsType } from '@/enums/eventEnum'
 import type { GlobalThemeJsonType } from '@/settings/chartThemes/index'
 import type { RequestConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
+import type { ChatCategoryEnum, ChatCategoryEnumName } from '@/packages/components/VChart/index.d'
 
 export enum ChartFrameEnum {
   // 支持 dataset 的 echarts 框架
   ECHARTS = 'echarts',
+  // VChart 框架
+  VCHART = 'VChart',
   // UI 组件框架
   NAIVE_UI = 'naiveUI',
   // 自定义带数据组件
@@ -24,11 +27,11 @@ export type ConfigType = {
   // 标题
   title: string
   // 分类
-  category: string
+  category: ChatCategoryEnum
   // 分类名称
-  categoryName: string
+  categoryName: ChatCategoryEnumName
   // 所属包
-  package: string
+  package: PackagesCategoryEnum
   // 归类
   chartFrame?: ChartFrameEnum
   // 预览图
@@ -173,6 +176,7 @@ export type PickCreateComponentType<T extends keyof CreateComponentType> = Pick<
 // 包分类枚举
 export enum PackagesCategoryEnum {
   CHARTS = 'Charts',
+  VCHART = 'VChart',
   TABLES = 'Tables',
   INFORMATIONS = 'Informations',
   PHOTOS = 'Photos',
@@ -183,6 +187,7 @@ export enum PackagesCategoryEnum {
 // 包分类名称
 export enum PackagesCategoryName {
   CHARTS = '图表',
+  VCHART = 'VChart',
   TABLES = '列表',
   INFORMATIONS = '信息',
   PHOTOS = '图片',
@@ -199,6 +204,7 @@ export enum FetchComFlagType {
 // 图表包类型
 export type PackagesType = {
   [PackagesCategoryEnum.CHARTS]: ConfigType[]
+  [PackagesCategoryEnum.VCHART]: ConfigType[]
   [PackagesCategoryEnum.INFORMATIONS]: ConfigType[]
   [PackagesCategoryEnum.TABLES]: ConfigType[]
   [PackagesCategoryEnum.PHOTOS]: ConfigType[]

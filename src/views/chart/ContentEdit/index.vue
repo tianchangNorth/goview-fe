@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, computed, provide } from 'vue'
+import { onMounted, computed, provide, watch } from 'vue'
 import { chartColors } from '@/settings/chartThemes/index'
 import { MenuEnum } from '@/enums/editPageEnum'
 import { CreateComponentType, CreateComponentGroupType } from '@/packages/index.d'
@@ -104,6 +104,7 @@ import { useAddKeyboard } from '../hooks/useKeyboard.hook'
 import { useSync } from '../hooks/useSync.hook'
 import { dragHandle, dragoverHandle, mousedownHandleUnStop, useMouseHandle } from './hooks/useDrag.hook'
 import { useComponentStyle, useSizeStyle } from './hooks/useStyle.hook'
+import { useInitVChartsTheme } from '@/hooks'
 
 import { ContentBox } from '../ContentBox/index'
 import { EditGroup } from './components/EditGroup'
@@ -161,7 +162,7 @@ const themeSetting = computed(() => {
 
 // 配置项
 const themeColor = computed(() => {
-  const colorCustomMergeData = colorCustomMerge(chartEditStore.getEditCanvasConfig.chartCustomThemeColorInfo)
+  const colorCustomMergeData: any = colorCustomMerge(chartEditStore.getEditCanvasConfig.chartCustomThemeColorInfo)
   return colorCustomMergeData[chartEditStore.getEditCanvasConfig.chartThemeColor]
 })
 
@@ -182,7 +183,6 @@ const rangeStyle = computed(() => {
     ? { background: backgroundColor }
     : { background: `url(${backgroundImage}) no-repeat center center / cover !important` }
 
-  // @ts-ignore
   return {
     ...computedBackground,
     width: 'inherit',
@@ -190,6 +190,10 @@ const rangeStyle = computed(() => {
   }
 })
 
+// 处理全局的 vChart 主题
+useInitVChartsTheme(chartEditStore)
+
+// 键盘事件
 onMounted(() => {
   // 键盘事件
   useAddKeyboard()

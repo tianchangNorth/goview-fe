@@ -59,7 +59,7 @@ const typeList = shallowRef([
     disabled: false
   },
   {
-    title: renderLang('project.my_templete'),
+    title: renderLang('project.my_template'),
     key: PageEnum.BASE_HOME_TEMPLATE_NAME,
     icon: ObjectStorageIcon,
     disabled: true

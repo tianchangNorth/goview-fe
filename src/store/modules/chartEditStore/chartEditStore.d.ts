@@ -84,6 +84,7 @@ export enum EditCanvasConfigEnum {
   CHART_THEME_COLOR = 'chartThemeColor',
   CHART_CUSTOM_THEME_COLOR_INFO = 'chartCustomThemeColorInfo',
   CHART_THEME_SETTING = 'chartThemeSetting',
+  VCHART_THEME_NAME = 'vChartThemeName',
   BACKGROUND = 'background',
   BACKGROUND_IMAGE = 'backgroundImage',
   SELECT_COLOR = 'selectColor',
@@ -134,7 +135,9 @@ export type EditCanvasConfigType = {
   // 图表全局配置
   [EditCanvasConfigEnum.CHART_THEME_SETTING]: GlobalThemeJsonType
   // 图表主题颜色
-  [EditCanvasConfigEnum.SELECT_COLOR]: boolean
+  [EditCanvasConfigEnum.SELECT_COLOR]: boolean,
+  // vChart 主题
+  [EditCanvasConfigEnum.VCHART_THEME_NAME]: string
   // 预览展示方式
   [EditCanvasConfigEnum.PREVIEW_SCALE_TYPE]: PreviewScaleEnum
 }
