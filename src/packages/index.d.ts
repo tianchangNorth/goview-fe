@@ -27,9 +27,9 @@ export type ConfigType = {
   // 标题
   title: string
   // 分类
-  category: ChatCategoryEnum
+  category: string
   // 分类名称
-  categoryName: ChatCategoryEnumName
+  categoryName: string
   // 所属包
   package: PackagesCategoryEnum
   // 归类
