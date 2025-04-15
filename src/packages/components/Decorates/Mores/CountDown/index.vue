@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="vChartRef">
     <n-countdown
       ref="countdownRef"
       :duration="totalDuration"
@@ -79,6 +79,8 @@ import { CreateComponentType } from '@/packages/index.d'
 import { Flipper } from '@/components/Pages/Flipper'
 import { OptionType } from './config'
 import { CountdownInst, CountdownProps } from 'naive-ui/es/countdown/src/Countdown'
+import { useChartDataFetch } from '@/hooks'
+import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
 
 const props = defineProps({
   chartConfig: {
@@ -173,6 +175,10 @@ watch(
 
 onMounted(() => {
   updateTotalDuration()
+})
+
+const { vChartRef } = useChartDataFetch(props.chartConfig, useChartEditStore, (newData: any) => {
+  props.chartConfig.option.dataset = newData
 })
 </script>
 
