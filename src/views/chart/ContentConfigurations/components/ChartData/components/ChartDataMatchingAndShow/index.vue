@@ -76,6 +76,14 @@
     <n-timeline-item type="success" :title="TimelineTitleEnum.CONTENT">
       <n-space vertical>
         <n-space class="source-btn-box">
+          <n-button class="sourceBtn-item" :disabled="noData" @click="openOnlineEditHandle">
+            <template #icon>
+              <n-icon>
+                <EditIcon />
+              </n-icon>
+            </template>
+            编辑
+          </n-button>
           <n-upload
             v-model:file-list="uploadFileListRef"
             :show-file-list="false"
@@ -118,6 +126,54 @@
       </n-space>
     </n-timeline-item>
   </n-timeline>
+  <!-- 编辑数据 -->
+  <n-modal
+    class="go-online-edit go-background-filter"
+    :title="'组件数据在线编辑 — ' + targetData.chartConfig.title"
+    preset="card"
+    size="small"
+    style="width: 800px"
+    v-model:show="showRef"
+    transform-origin="center"
+    :mask-closable="false"
+    :bordered="true"
+    @afterLeave="closeOlineEditHandle"
+    content-style="padding: 0;"
+  >
+    <n-divider style="margin: 4px 0 10px" />
+    <monaco-editor
+      v-model:modelValue="editorCode"
+      height="70vh"
+      :language="targetData.chartConfig.chartKey === 'VHtmlCommon' ? 'html' : 'json'"
+    />
+    <template #action>
+      <n-space justify="space-between">
+        <div class="go-flex-items-center">
+          <n-tag :bordered="false" type="primary" style="border-radius: 5px">
+            <template #icon>
+              <n-icon :component="DocumentTextIcon" />
+            </template>
+            说明
+          </n-tag>
+          <n-space :wrap-item="false" vertical>
+            <n-text class="go-ml-2" depth="3" style="font-size: 1">
+              1. 格式化代码：
+              <n-tag :bordered="false" type="warning" style="font-size: 12px">( shift + alt + f ) </n-tag>
+              <n-divider vertical />
+              <n-tag :bordered="false" type="warning" style="font-size: 12px">右键 -> Format Document</n-tag>
+            </n-text>
+            <n-text class="go-ml-2" depth="3" style="font-size: 1; text-align: left">
+              2. 字符串需要用英文双引号包裹，否则会报错
+            </n-text>
+          </n-space>
+        </div>
+        <n-space>
+          <n-button class="go-px-4" :focusable="false" @click="closeOlineEditHandle">取消</n-button>
+          <n-button class="go-px-4" type="primary" @click="saveOlineEditHandle"> 保存 </n-button>
+        </n-space>
+      </n-space>
+    </template>
+  </n-modal>
 </template>
 
 <script setup lang="ts">
@@ -129,7 +185,9 @@ import { DataResultEnum, TimelineTitleEnum } from '../../index.d'
 import { ChartDataMonacoEditor } from '../ChartDataMonacoEditor'
 import { useFile } from '../../hooks/useFile.hooks'
 import { useTargetData } from '../../../hooks/useTargetData.hook'
-import { toString, isArray } from '@/utils'
+import { toString, isArray, goDialog } from '@/utils'
+// @ts-ignore
+import MonacoEditor from '@/components/Pages/MonacoEditor/index.vue'
 
 const { targetData } = useTargetData()
 defineProps({
@@ -147,13 +205,16 @@ defineProps({
 const tableTitle = ['字段', '映射', '状态']
 const vchartTableTitle = ['字段', '接口映射字段']
 
-const { HelpOutlineIcon } = icon.ionicons5
-const { DocumentAddIcon, DocumentDownloadIcon } = icon.carbon
+const { HelpOutlineIcon, DocumentTextIcon } = icon.ionicons5
+const { DocumentAddIcon, DocumentDownloadIcon, EditIcon } = icon.carbon
 
 const source = ref()
 const dimensions = ref()
 const dimensionsAndSource = ref()
 const noData = ref(false)
+const showRef = ref(false)
+// 编辑的代码
+const editorCode = ref('')
 
 // 映射列表, 注意内部的mapping是响应式的，上方需要修改
 const fieldList = ref<
@@ -238,6 +299,67 @@ const initFieldListHandle = () => {
       }
     }
   }
+}
+
+// 打开在线编辑
+const openOnlineEditHandle = () => {
+  showRef.value = true
+  if (targetData.value.chartConfig.chartKey !== 'VHtmlCommon') {
+    editorCode.value = JSON.stringify(source.value, null, 2)
+  } else {
+    editorCode.value = source.value
+  }
+}
+
+// 取消在线编辑
+const closeOlineEditHandle = () => {
+  showRef.value = false
+}
+
+// 取消在线编辑
+const saveOlineEditHandle = () => {
+  // 设置
+  const setDataHandle = (newData: any) => {
+    targetData.value.option.dataset = newData
+  }
+  goDialog({
+    message: '是否保存编辑后的数据？',
+    onPositiveCallback: () => {
+      try {
+        let jsonData = editorCode.value
+        if (targetData.value.chartConfig.chartKey !== 'VHtmlCommon') {
+          jsonData = JSON.parse(jsonData)
+        }
+        if (typeof jsonData !== typeof source.value) {
+          goDialog({
+            message: '当前数据类型与原类型不相同, 是否强制应用数据?',
+            onPositiveCallback: () => {
+              try {
+                setDataHandle(jsonData)
+                editorCode.value = ''
+                window['$message'].success('保存成功')
+                closeOlineEditHandle()
+              } catch (error) {
+                window['$message'].error('内容应用错误, 请检查格式是否正确')
+              }
+            }
+          })
+        } else {
+          try {
+            setDataHandle(jsonData)
+            editorCode.value = ''
+            window['$message'].success('保存成功')
+            closeOlineEditHandle()
+          } catch (error) {
+            window['$message'].error('内容应用错误, 请检查格式是否正确')
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        window['$message'].error('内容应用错误, 请检查格式是否正确')
+      }
+    }
+  })
 }
 
 watch(
