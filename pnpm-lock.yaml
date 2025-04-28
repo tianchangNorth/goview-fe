@@ -111,8 +111,8 @@ importers:
         specifier: ^0.2.5-beta
         version: 0.2.5-beta(@vue/compiler-sfc@3.5.13)(vue@3.5.13(typescript@4.6.3))
       vue3-sketch-ruler:
-        specifier: ^1.3.3
-        version: 1.3.16(vue@3.5.13(typescript@4.6.3))
+        specifier: 1.3.3
+        version: 1.3.3(vue@3.5.13(typescript@4.6.3))
       vuedraggable:
         specifier: ^4.1.0
         version: 4.1.0(vue@3.5.13(typescript@4.6.3))
@@ -721,28 +721,24 @@ packages:
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@resvg/resvg-js-linux-arm64-musl@2.4.1':
     resolution: {integrity: sha512-6mT0+JBCsermKMdi/O2mMk3m7SqOjwi9TKAwSngRZ/nQoL3Z0Z5zV+572ztgbWr0GODB422uD8e9R9zzz38dRQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@resvg/resvg-js-linux-x64-gnu@2.4.1':
     resolution: {integrity: sha512-60KnrscLj6VGhkYOJEmmzPlqqfcw1keDh6U+vMcNDjPhV3B5vRSkpP/D/a8sfokyeh4VEacPSYkWGezvzS2/mg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@resvg/resvg-js-linux-x64-musl@2.4.1':
     resolution: {integrity: sha512-0AMyZSICC1D7ge115cOZQW8Pcad6PjWuZkBFF3FJuSxC6Dgok0MQnLTs2MfMdKBlAcwO9dXsf3bv9tJZj8pATA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@resvg/resvg-js-win32-arm64-msvc@2.4.1':
     resolution: {integrity: sha512-76XDFOFSa3d0QotmcNyChh2xHwk+JTFiEQBVxMlHpHMeq7hNrQJ1IpE1zcHSQvrckvkdfLboKRrlGB86B10Qjw==}
@@ -3952,9 +3948,8 @@ packages:
       '@vue/compiler-sfc': '>=3.0.0'
       vue: '>=3.0.0'
 
-  vue3-sketch-ruler@1.3.16:
-    resolution: {integrity: sha512-k/TBOwbueU9eWOF7k/emsZMwtEqFk/FxG+h//TlaZ2B8RWbxhIe6hPFgggO4Jng10ARsuH4cMGAR+ZOuN4ozgg==}
-    deprecated: This version is deprecated. Please upgrade to version 2X for better features and performance.See https://github.com/kakajun/vue3-sketch-ruler
+  vue3-sketch-ruler@1.3.3:
+    resolution: {integrity: sha512-k7wK34fWq0v4PiEklF0KAxS37UJS2nm8mMaE8g4Bqv9ZbBY7MxqrkM1wIj9VHmjN/MyQeodFWdg6lJv/ZESKlw==}
     hasBin: true
     peerDependencies:
       '@vue/composition-api': ^1.1.0
@@ -4331,7 +4326,7 @@ snapshots:
       '@types/node': 20.5.1
       chalk: 4.1.2
       cosmiconfig: 8.3.6(typescript@5.7.2)
-      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@4.6.3))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.7.2))(typescript@5.7.2)
+      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@4.6.3))(ts-node@10.9.2(@types/node@16.18.122)(typescript@4.6.3))(typescript@5.7.2)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -5623,7 +5618,7 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@4.6.3))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.7.2))(typescript@5.7.2):
+  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@4.6.3))(ts-node@10.9.2(@types/node@16.18.122)(typescript@4.6.3))(typescript@5.7.2):
     dependencies:
       '@types/node': 20.5.1
       cosmiconfig: 8.3.6(typescript@5.7.2)
@@ -8208,7 +8203,7 @@ snapshots:
       '@vue/compiler-sfc': 3.5.13
       vue: 3.5.13(typescript@4.6.3)
 
-  vue3-sketch-ruler@1.3.16(vue@3.5.13(typescript@4.6.3)):
+  vue3-sketch-ruler@1.3.3(vue@3.5.13(typescript@4.6.3)):
     optionalDependencies:
       vue: 3.5.13(typescript@4.6.3)
 
