@@ -26,8 +26,6 @@ import { isPreview } from '@/utils'
 import { DatasetComponent, GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
 import dataJson from './data.json'
 
-const isInit = ref<boolean>(false)
-
 const props = defineProps({
   themeSetting: {
     type: Object,
@@ -106,19 +104,18 @@ watch(
   newData => {
     try {
       // 防止初始化时触发修改，导致部分参数丢失
-      if (!isInit.value) {
-        isInit.value = true
+      if (isPreview()) {
+        return
+      }
+      if (newData === 'nomal') {
+        props.chartConfig.option.series[0].radius = '70%'
+        props.chartConfig.option.series[0].roseType = false
+      } else if (newData === 'ring') {
+        props.chartConfig.option.series[0].radius = ['40%', '65%']
+        props.chartConfig.option.series[0].roseType = false
       } else {
-        if (newData === 'nomal') {
-          props.chartConfig.option.series[0].radius = '70%'
-          props.chartConfig.option.series[0].roseType = false
-        } else if (newData === 'ring') {
-          props.chartConfig.option.series[0].radius = ['40%', '65%']
-          props.chartConfig.option.series[0].roseType = false
-        } else {
-          props.chartConfig.option.series[0].radius = '70%'
-          props.chartConfig.option.series[0].roseType = true
-        }
+        props.chartConfig.option.series[0].radius = '70%'
+        props.chartConfig.option.series[0].roseType = true
       }
     } catch (error) {
       console.log(error)
