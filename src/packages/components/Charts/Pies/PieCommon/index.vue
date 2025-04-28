@@ -103,6 +103,10 @@ watch(
   () => props.chartConfig.option.type,
   newData => {
     try {
+      // 防止初始化时触发修改，导致部分参数丢失
+      if (isPreview()) {
+        return
+      }
       if (newData === 'nomal') {
         props.chartConfig.option.series[0].radius = '70%'
         props.chartConfig.option.series[0].roseType = false
