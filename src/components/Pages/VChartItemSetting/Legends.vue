@@ -15,7 +15,7 @@
           </setting-item>
         </setting-item-box>
         <setting-item-box name="项配置">
-          <FontStyle :style="legendItem.item.label.style"></FontStyle>
+          <FontStyle :style="toRefs(legendItem.item.label.style)"></FontStyle>
         </setting-item-box>
       </collapse-item>
     </div>
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { PropType, toRefs } from 'vue'
 import { legendsConfig } from '@/packages/chartConfiguration/vcharts/index'
 import FontStyle from './common/FontStyle.vue'
 import { vChartGlobalThemeJsonType } from '@/settings/vchartThemes/index'

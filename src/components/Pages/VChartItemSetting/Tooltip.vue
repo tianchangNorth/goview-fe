@@ -20,20 +20,20 @@
         </setting-item>
       </setting-item-box>
       <setting-item-box name="标题">
-        <FontStyle :style="optionData.tooltip.style.titleLabel"></FontStyle>
+        <FontStyle :style="toRefs(optionData.tooltip.style.titleLabel)"></FontStyle>
       </setting-item-box>
       <setting-item-box name="名称">
-        <FontStyle :style="optionData.tooltip.style.keyLabel"></FontStyle>
+        <FontStyle :style="toRefs(optionData.tooltip.style.keyLabel)"></FontStyle>
       </setting-item-box>
       <setting-item-box name="值">
-        <FontStyle :style="optionData.tooltip.style.valueLabel"></FontStyle>
+        <FontStyle :style="toRefs(optionData.tooltip.style.valueLabel)"></FontStyle>
       </setting-item-box>
     </collapse-item>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { PropType, toRefs } from 'vue'
 import FontStyle from './common/FontStyle.vue'
 import { vChartGlobalThemeJsonType } from '@/settings/vchartThemes/index'
 import { CollapseItem, SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
