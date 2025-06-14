@@ -1,5 +1,19 @@
 {
   "visible": true,
+  "unit": {
+    "visible": true,
+    "text": "",
+    "style": {
+      "text": "",
+      "fontSize": 12,
+      "fill": "#B9B8CE",
+      "fontFamily": "SimSun",
+      "fontWeight": "normal",
+      "angle": 0,
+      "dx": 0,
+      "dy": 0
+    }
+  },
   "label": {
     "visible": true,
     "style": {
@@ -7,17 +21,25 @@
       "fill": "#B9B8CE",
       "fontFamily": "SimSun",
       "fontWeight": "normal",
-      "angle": 0
+      "angle": 0,
+      "dx": 0,
+      "dy": 0
     }
   },
   "title": {
     "visible": true,
+    "position": "middle",
+    "angle": 0,
+    "padding": [],
     "style": {
       "text": "",
       "fontSize": 12,
       "fill": "#B9B8CE",
       "fontFamily": "SimSun",
-      "fontWeight": "normal"
+      "fontWeight": "normal",
+      "angle": 0,
+      "dx": 0,
+      "dy": 0
     }
   },
   "domainLine": {

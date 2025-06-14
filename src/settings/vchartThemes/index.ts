@@ -6,6 +6,9 @@ export type FontType = {
   fontFamily: string
   fontWeight: string
   fill: string
+  dy?: number
+  dx?: number
+  angle?: number
   [T: string]: any
 }
 export interface vChartGlobalThemeJsonType extends Partial<ThemeJsonType> {
