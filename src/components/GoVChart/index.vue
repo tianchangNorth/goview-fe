@@ -197,7 +197,7 @@ const createOrUpdateChart = (
   }
 ) => {
   if (vChartRef.value && !chart) {
-    const spec = transformHandler[chartProps.category](chartProps)
+    const spec = transformHandler[chartProps.category || '']?.(chartProps)
     chart = new VChart(
       { ...spec, data: chartProps.dataset },
       {
@@ -208,7 +208,7 @@ const createOrUpdateChart = (
     chart.renderSync()
     return true
   } else if (chart) {
-    const spec = transformHandler[chartProps.category](chartProps)
+    const spec = transformHandler[chartProps.category || '']?.(chartProps)
     chart.updateSpec({ ...spec, data: toRaw(chartProps.dataset), dataset: undefined })
     return true
   }

@@ -1,5 +1,5 @@
 <template>
-  <collapse-item v-model:name="axis.name">
+  <collapse-item :name="axis.name">
     <template #header>
       <n-switch v-model:value="axis.visible" size="small"></n-switch>
     </template>

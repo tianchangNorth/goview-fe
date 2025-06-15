@@ -66,7 +66,7 @@
           :options="labelConfig.fontWeight"
         />
       </SettingItem>
-      <setting-item name="文字边框大小" v-if="optionData.series[0].label.textBorderWidth">
+      <setting-item name="文字边框大小" v-if="optionData.series[0].label.textBorderWidth > -1">
         <n-input-number
           v-model:value="optionData.series[0].label.textBorderWidth"
           size="small"
