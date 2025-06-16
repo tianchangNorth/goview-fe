@@ -44,6 +44,13 @@
       <FontStyle :style="toRefs(optionData.label.style)"></FontStyle>
     </SettingItemBox>
     <SettingItemBox name="分段样式">
+      <setting-item name="纹理类型">
+        <n-select
+          v-model:value="optionData.pie.style.texture"
+          :options="styleConfig.texture"
+          size="small"
+        ></n-select>
+      </setting-item>
       <setting-item name="圆角大小">
         <n-input-number v-model:value="optionData.pie.style.cornerRadius" size="small" :min="0"></n-input-number>
       </setting-item>
@@ -64,7 +71,7 @@
           :min="0"
         ></n-input-number>
       </setting-item>
-      <setting-item name="透明度">
+      <setting-item name="描边透明度">
         <n-input-number
           v-model:value="optionData.pie.style.outerBorder.strokeOpacity"
           :step="0.1"
@@ -89,7 +96,7 @@ import { VChartGlobalSetting } from '@/components/Pages/VChartItemSetting'
 import FontStyle from '@/components/Pages/VChartItemSetting/common/FontStyle.vue'
 import type { vChartGlobalThemeJsonType } from '@/settings/vchartThemes/index'
 import { CollapseItem, SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
-import { labelConfig } from '@/packages/chartConfiguration/vcharts/index'
+import { labelConfig, styleConfig } from '@/packages/chartConfiguration/vcharts/index'
 
 const props = defineProps({
   optionData: {

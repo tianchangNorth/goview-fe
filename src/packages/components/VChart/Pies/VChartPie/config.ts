@@ -49,7 +49,9 @@ export const option: IPieOption & { dataset?: any } = {
         lineWidth: 0,
         // 颜色
         stroke: '#ffffff'
-      }
+      },
+      // 纹理
+      texture: ''
     },
     state: {
       hover: {
