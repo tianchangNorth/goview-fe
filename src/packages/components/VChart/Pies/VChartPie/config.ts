@@ -5,7 +5,8 @@ import { vChartOptionPrefixHandle } from '@/packages/public/vChart'
 import data from './data.json'
 import cloneDeep from 'lodash/cloneDeep'
 import type { ChatCategoryEnum, IPieOption } from '../../index.d'
-import axisThemeJson from '@/settings/vchartThemes/axis.theme.json'
+
+const OUTER_RADIUS = 0.75
 
 export const includes = ['legends', 'tooltip']
 export const option: IPieOption & { dataset?: any } = {
@@ -19,7 +20,7 @@ export const option: IPieOption & { dataset?: any } = {
   centerX: '50%',
   centerY: '50%',
   innerRadius: 0.68,
-  outerRadius: 0.75,
+  outerRadius: OUTER_RADIUS,
   label: {
     visible: true,
     position: 'outside',
@@ -29,11 +30,41 @@ export const option: IPieOption & { dataset?: any } = {
       fontFamily: 'SimSun',
       fontWeight: 'normal',
       angle: 0
+    },
+    line: {
+      visible: true
+    }
+  },
+  pie: {
+    style: {
+      // 圆角
+      cornerRadius: 50,
+      // 描边宽度
+      outerBorder: {
+        // 透明度
+        strokeOpacity: 1,
+        // 外描边距离
+        distance: 0,
+        // 宽度
+        lineWidth: 0,
+        // 颜色
+        stroke: '#ffffff'
+      }
+    },
+    state: {
+      hover: {
+        outerRadius: 0.85
+      },
+      selected: {
+        outerRadius: 0.85
+      }
     }
   },
   // 业务配置（后续会被转换为图表spec)
   category: VChartPieConfig.category as ChatCategoryEnum.PIE,
-  extensionMark: []
+  extensionMark: [],
+  // 动画
+  animationNormal: {}
 }
 
 export default class Config extends PublicConfigClass implements CreateComponentType {

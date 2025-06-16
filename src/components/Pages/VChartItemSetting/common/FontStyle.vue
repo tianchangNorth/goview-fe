@@ -20,7 +20,7 @@
       <n-input-number v-model:value="style.dy.value" size="small" />
     </setting-item>
     <setting-item v-if="style?.angle" name="旋转">
-      <n-input-number v-model:value="style.angle.value" :min="0" :max="360" size="small" />
+      <n-input-number v-model:value="style.angle.value" :step="0.1" :min="0" :max="360" size="small" />
     </setting-item>
   </template>
 </template>
