@@ -129,7 +129,7 @@ const animationHandle = (value: boolean) => {
               effects: {
                 channel: {
                   outerRadius: {
-                    to: props.optionData.outerRadius * 100 + 0.1
+                    to: props.optionData.outerRadius * 100 + 10
                   }
                 },
                 easing: 'linear'
@@ -140,7 +140,7 @@ const animationHandle = (value: boolean) => {
               effects: {
                 channel: {
                   outerRadius: {
-                    to: props.optionData.outerRadius * 100 + 0.1
+                    to: props.optionData.outerRadius * 100 + 10
                   }
                 },
                 easing: 'linear'

@@ -209,7 +209,11 @@ const createOrUpdateChart = (
     return true
   } else if (chart) {
     const spec = transformHandler[chartProps.category || '']?.(chartProps)
-    chart.updateSpec({ ...spec, data: toRaw(chartProps.dataset), dataset: undefined })
+    chart.updateSpec({ ...spec, data: toRaw(chartProps.dataset), dataset: undefined }, false, undefined, {
+      change: false,
+      reMake: false,
+      reAnimate: true
+    })
     return true
   }
   return false
