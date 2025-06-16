@@ -78,5 +78,43 @@ export const labelConfig = {
       label: '底部-左',
       value: 'bottom-left'
     }
+  ],
+  linePosition: [
+    {
+      label: '顶部',
+      value: 'top'
+    },
+    {
+      label: '底部',
+      value: 'bottom'
+    },
+    {
+      label: '左侧',
+      value: 'left'
+    },
+    {
+      label: '右侧',
+      value: 'right'
+    },
+    {
+      label: '顶部-右',
+      value: 'top-right'
+    },
+    {
+      label: '顶部-左',
+      value: 'top-left'
+    },
+    {
+      label: '底部-右',
+      value: 'bottom-right'
+    },
+    {
+      label: '底部-左',
+      value: 'bottom-left'
+    },
+    {
+      label: '居中',
+      value: 'center'
+    }
   ]
 }

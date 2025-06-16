@@ -5,9 +5,9 @@ import { vChartOptionPrefixHandle } from '@/packages/public/vChart'
 import data from './data.json'
 import cloneDeep from 'lodash/cloneDeep'
 import axisThemeJson from '@/settings/vchartThemes/axis.theme.json'
-import { ILineOption } from '../../index.d'
+import { ChatCategoryEnum, ILineOption } from '../../index.d'
 
-export const includes = ['legends', 'tooltip']
+export const includes = ['legends', 'tooltip', 'label', 'line', 'point']
 export const option: ILineOption & { dataset?: any } = {
   // 图表配置
   type: 'line',
@@ -16,8 +16,10 @@ export const option: ILineOption & { dataset?: any } = {
   yField: 'value',
   seriesField: 'country',
   stack: true,
+  // 开启百分比
+  percent: false,
   // 业务配置（后续会被转换为图表spec)
-  category: VChartLineConfig.category,
+  category: VChartLineConfig.category as ChatCategoryEnum.LINE,
   xAxis: {
     name: 'x轴',
     ...axisThemeJson,
@@ -25,7 +27,7 @@ export const option: ILineOption & { dataset?: any } = {
       ...axisThemeJson.grid,
       visible: false
     }
-  },
+  } as any,
   yAxis: {
     name: 'y轴',
     ...axisThemeJson,
@@ -36,7 +38,7 @@ export const option: ILineOption & { dataset?: any } = {
         lineDash: [3, 3]
       }
     }
-  }
+  } as any
 }
 
 export default class Config extends PublicConfigClass implements CreateComponentType {

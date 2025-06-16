@@ -7,7 +7,11 @@
 
       <setting-item-box name="布局">
         <setting-item name="位置">
-          <n-select v-model:value="optionData.label.position" size="small" :options="labelConfig.barPosition" />
+          <n-select
+            v-model:value="optionData.label.position"
+            size="small"
+            :options="positionOptions || labelConfig.barPosition"
+          />
         </setting-item>
 
         <setting-item name="间距">
@@ -33,6 +37,10 @@ defineProps({
   optionData: {
     type: Object as PropType<vChartGlobalThemeJsonType>,
     required: true
+  },
+  positionOptions: {
+    type: Array,
+    required: false
   }
 })
 </script>
