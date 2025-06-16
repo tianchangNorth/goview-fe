@@ -23,6 +23,8 @@ export const option: IBarOption & { dataset?: any } = {
   yField: ['value'],
   seriesField: 'year',
   stack: true,
+  // 开启百分比
+  percent: false,
   // 业务配置（后续会被转换为图表spec)
   category: VChartBarStackConfig.category as ChatCategoryEnum.BAR,
   xAxis: {
