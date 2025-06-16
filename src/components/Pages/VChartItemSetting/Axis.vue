@@ -15,15 +15,15 @@
       <FontStyle :style="toRefs(axis.unit.style)"></FontStyle>
     </setting-item-box>
     <setting-item-box name="轴标签">
-      <setting-item name="可见性">
+      <setting-item v-if="axis.label" name="可见性">
         <n-space>
           <n-switch v-model:value="axis.label.visible" size="small"></n-switch>
         </n-space>
       </setting-item>
-      <setting-item name="角度">
+      <setting-item v-if="axis.label" name="角度">
         <n-input-number v-model:value="axis.label.style.angle" :min="0" :max="360" size="small" />
       </setting-item>
-      <FontStyle :style="toRefs(axis.label.style)"></FontStyle>
+      <FontStyle v-if="axis.label" :style="toRefs(axis.label.style)"></FontStyle>
     </setting-item-box>
     <setting-item-box name="轴标题">
       <setting-item name="可见性">

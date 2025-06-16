@@ -25,7 +25,7 @@
         <n-input v-model:value="optionData.centerY" :step="1" :min="0" size="small"></n-input>
       </setting-item>
     </SettingItemBox>
-    <SettingItemBox name="标签">
+    <SettingItemBox name="标签" v-if="optionData.label">
       <SettingItem>
         <n-space>
           <n-switch v-model:value="optionData.label.visible" size="small"></n-switch>
@@ -45,11 +45,7 @@
     </SettingItemBox>
     <SettingItemBox name="分段样式">
       <setting-item name="纹理类型">
-        <n-select
-          v-model:value="optionData.pie.style.texture"
-          :options="styleConfig.texture"
-          size="small"
-        ></n-select>
+        <n-select v-model:value="optionData.pie.style.texture" :options="styleConfig.texture" size="small"></n-select>
       </setting-item>
       <setting-item name="圆角大小">
         <n-input-number v-model:value="optionData.pie.style.cornerRadius" size="small" :min="0"></n-input-number>

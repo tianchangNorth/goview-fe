@@ -74,5 +74,29 @@
       },
       "spaceRow": 10
     }
+  },
+  "label": {
+    "visible": false,
+    "position": "outside",
+    "offset": 5,
+    "type": "text",
+    "style": {
+      "fontSize": 12,
+      "fill": "#B9B8CE",
+      "fontFamily": "SimSun",
+      "fontWeight": "normal",
+      "angle": 0,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  "bar": {
+    "style": {
+      "width": 10,
+      "cornerRadius": 0,
+      "fillOpacity": 1,
+      "opacity": 1,
+      "texture": ""
+    }
   }
 }
