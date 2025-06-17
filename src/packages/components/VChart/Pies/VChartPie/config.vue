@@ -3,14 +3,14 @@
   <VChartGlobalSetting :optionData="optionData"></VChartGlobalSetting>
   <!-- 饼图配制 -->
   <CollapseItem name="饼图" expanded>
-    <SettingItemBox name="动画">
+    <!-- <SettingItemBox name="动画">
       <SettingItem>
         <n-space>
           <n-switch v-model:value="animationRef" size="small" @update:value="animationHandle"></n-switch>
           <n-text>开启动画</n-text>
         </n-space>
       </SettingItem>
-    </SettingItemBox>
+    </SettingItemBox> -->
     <SettingItemBox name="图形">
       <setting-item name="内圈范围">
         <n-input-number v-model:value="optionData.innerRadius" :step="0.1" :min="0" size="small"></n-input-number>
