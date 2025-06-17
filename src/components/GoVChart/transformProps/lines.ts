@@ -1,4 +1,4 @@
-import { cloneDeep } from "lodash"
+import { cloneDeep } from 'lodash'
 
 export default (chartProps: any) => {
   const spec = cloneDeep(chartProps)
@@ -18,15 +18,26 @@ export default (chartProps: any) => {
   // axis
   const { name: xAxisName, ...restXAxisProps } = chartProps.xAxis
   const { name: yAxisName, ...restYAxisProps } = chartProps.yAxis
-  spec.axes = [{
-    orient: 'bottom',
-    ...restXAxisProps
-  }, {
-    orient: 'left',
-    ...restYAxisProps
-  }]
+  spec.axes = [
+    {
+      orient: 'bottom',
+      ...restXAxisProps
+    },
+    {
+      orient: 'left',
+      ...restYAxisProps
+    }
+  ]
   delete spec.xAxis
   delete spec.yAxis
+
+  spec.label = {
+    ...spec.label,
+    style: {
+      ...spec.label?.style,
+      lineWidth: 0
+    }
+  }
   // console.log('spec-line-transform', spec)
   return spec
 }
