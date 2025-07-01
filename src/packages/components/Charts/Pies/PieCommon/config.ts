@@ -61,7 +61,7 @@ const option = {
       emphasis: {
         label: {
           show: true,
-          fontSize: '40',
+          fontSize: 40,
           fontWeight: 'bold'
         }
       },
