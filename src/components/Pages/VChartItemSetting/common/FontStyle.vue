@@ -20,20 +20,20 @@
       <n-input-number v-model:value="style.dy.value" size="small" />
     </setting-item>
     <setting-item v-if="style?.angle" name="旋转">
-      <n-input-number v-model:value="style.angle.value" :min="0" :max="360" size="small" />
+      <n-input-number v-model:value="style.angle.value" :step="0.1" :min="0" :max="360" size="small" />
     </setting-item>
   </template>
 </template>
 
 <script setup lang="ts">
-import { PropType, toRefs } from 'vue'
+import { PropType } from 'vue'
 import { fontStyleConfig } from '@/packages/chartConfiguration/vcharts/index'
 import { FontType } from '@/settings/vchartThemes/index'
 import { SettingItem } from '@/components/Pages/ChartItemSetting'
 
 defineProps({
   style: {
-    type: Object as PropType<FontType>,
+    type: Object as PropType<any>,
     required: true
   }
 })

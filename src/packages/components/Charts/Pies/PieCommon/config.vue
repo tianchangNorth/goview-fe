@@ -66,7 +66,7 @@
           :options="labelConfig.fontWeight"
         />
       </SettingItem>
-      <setting-item name="文字边框大小" v-if="optionData.series[0].label.textBorderWidth">
+      <setting-item name="文字边框大小" v-if="optionData.series[0].label.textBorderWidth > -1">
         <n-input-number
           v-model:value="optionData.series[0].label.textBorderWidth"
           size="small"
@@ -81,7 +81,7 @@
         ></n-color-picker>
       </setting-item>
     </setting-item-box>
-    <setting-item-box name="圆角">
+    <setting-item-box name="分段样式">
       <setting-item name="圆角大小">
         <n-input-number
           v-model:value="optionData.series[0].itemStyle.borderRadius"

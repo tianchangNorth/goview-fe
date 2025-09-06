@@ -23,9 +23,9 @@ import config, { includes, seriesItem } from './config'
 import { mergeTheme } from '@/packages/public/chart'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
 import { useChartDataFetch } from '@/hooks'
-import { isPreview } from '@/utils'
 import { DatasetComponent, GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
 import isObject from 'lodash/isObject'
+import { cloneDeep } from 'lodash'
 
 const props = defineProps({
   themeSetting: {
@@ -61,7 +61,7 @@ watch(
       if (Array.isArray(newData?.dimensions)) {
         const seriesArr = []
         for (let i = 0; i < newData.dimensions.length - 1; i++) {
-          seriesArr.push(seriesItem)
+          seriesArr.push(cloneDeep(seriesItem))
         }
         replaceMergeArr.value = ['series']
         props.chartConfig.option.series = seriesArr

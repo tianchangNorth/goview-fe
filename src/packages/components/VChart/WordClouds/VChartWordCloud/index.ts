@@ -5,7 +5,7 @@ export const VChartWordCloudConfig: ConfigType = {
   key: 'VChartWordCloud',
   chartKey: 'VVChartWordCloud',
   conKey: 'VCVChartWordCloud',
-  title: 'VChart词云图',
+  title: '词云图-VChart',
   category: ChatCategoryEnum.WORDCLOUD,
   categoryName: ChatCategoryEnumName.WORDCLOUD,
   package: PackagesCategoryEnum.VCHART,

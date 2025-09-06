@@ -74,5 +74,49 @@
       },
       "spaceRow": 10
     }
+  },
+  "label": {
+    "visible": false,
+    "position": "outside",
+    "offset": 5,
+    "type": "text",
+    "style": {
+      "fontSize": 12,
+      "fill": "#B9B8CE",
+      "fontFamily": "SimSun",
+      "fontWeight": "normal",
+      "angle": 0,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  "bar": {
+    "style": {
+      "width": 10,
+      "cornerRadius": 0,
+      "fillOpacity": 1,
+      "opacity": 1,
+      "texture": ""
+    }
+  },
+  "line": {
+    "style": {
+      "lineWidth": 1,
+      "lineCap": "butt",
+      "curveType": "linear"
+    }
+  },
+  "point": {
+    "visible": true,
+    "style": {
+      "symbolType": "circle",
+      "size": 10,
+      "fillOpacity": 1,
+      "lineWidth": 2,
+      "stroke": "#ffffff",
+      "strokeOpacity": 1,
+      "dx": 0,
+      "dy": 0
+    }
   }
 }

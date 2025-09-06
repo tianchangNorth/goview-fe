@@ -5,7 +5,7 @@ export const VChartBarCrossrangeConfig: ConfigType = {
   key: 'VChartBarCrossrange',
   chartKey: 'VVChartBarCrossrange',
   conKey: 'VCVChartBarCrossrange',
-  title: 'VChart并列柱状图',
+  title: '并列柱状图-VChart',
   category: ChatCategoryEnum.BAR,
   categoryName: ChatCategoryEnumName.BAR,
   package: PackagesCategoryEnum.VCHART,

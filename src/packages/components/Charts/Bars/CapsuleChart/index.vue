@@ -124,7 +124,14 @@ const calcData = (data: any, type?: string) => {
 const calcCapsuleLengthAndLabelData = (dataset: any) => {
   try {
     const { source } = dataset
-    if (!source || !source.length) return
+    if (!source) return
+
+    if (source.length === 0) {
+      // 清空数据
+      state.capsuleLength = []
+      state.labelData = []
+      return
+    }
 
     state.capsuleItemHeight = numberSizeHandle(state.mergedConfig.itemHeight)
     const capsuleValue = source.map((item: DataProps) => item[state.mergedConfig.dataset.dimensions[1]])
@@ -140,9 +147,8 @@ const calcCapsuleLengthAndLabelData = (dataset: any) => {
     const labelData = Array.from(new Set(new Array(6).fill(0).map((v, i) => Math.ceil(i * oneFifth))))
 
     state.labelData = labelData
-
   } catch (error) {
-    console.warn(error);
+    console.warn(error)
   }
 }
 
