@@ -56,7 +56,7 @@ export interface IAreaOption extends Omit<IAreaChartSpec, 'axes'> {
 }
 
 export interface IPieOption extends IPieChartSpec {
-  category: ChatCategoryEnum.PIE
+  category?: ChatCategoryEnum.PIE
   type: 'pie'
 }
 

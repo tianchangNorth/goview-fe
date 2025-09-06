@@ -6,8 +6,16 @@ import data from './data.json'
 import axisThemeJson from '@/settings/vchartThemes/axis.theme.json'
 import { ChatCategoryEnum, IBarOption } from '../../index.d'
 import { merge, cloneDeep } from 'lodash'
+import { vChartGlobalThemeJson } from '@/settings/vchartThemes'
 
-export const includes = ['legends', 'tooltip']
+const barConfig = merge(cloneDeep(vChartGlobalThemeJson.bar), {
+  style: {
+    height: 10
+  }
+})
+delete (barConfig.style as { width?: any }).width
+
+export const includes = ['legends', 'tooltip', 'label']
 export const option: IBarOption & { dataset?: any } = {
   // 图表配置
   type: 'bar',
@@ -50,6 +58,9 @@ export const option: IBarOption & { dataset?: any } = {
         ...axisThemeJson.grid.style
       }
     }
+  },
+  bar: {
+    ...barConfig
   }
 }
 

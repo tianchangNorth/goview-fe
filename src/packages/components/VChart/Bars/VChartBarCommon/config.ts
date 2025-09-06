@@ -7,7 +7,7 @@ import axisThemeJson from '@/settings/vchartThemes/axis.theme.json'
 import { ChatCategoryEnum, IBarOption } from '../../index.d'
 import { merge, cloneDeep } from 'lodash'
 
-export const includes = ['legends', 'tooltip']
+export const includes = ['legends', 'tooltip', 'label', 'bar']
 export const option: IBarOption & { dataset?: any } = {
   // 图表配置
   type: 'bar',

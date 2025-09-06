@@ -5,7 +5,7 @@ export const VChartBarStackConfig: ConfigType = {
   key: 'VChartBarStack',
   chartKey: 'VVChartBarStack',
   conKey: 'VCVChartBarStack',
-  title: 'VChart堆叠柱状图',
+  title: '堆叠柱状图-VChart',
   category: ChatCategoryEnum.BAR,
   categoryName: ChatCategoryEnumName.BAR,
   package: PackagesCategoryEnum.VCHART,

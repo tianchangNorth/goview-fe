@@ -5,7 +5,7 @@ export const VChartScatterConfig: ConfigType = {
   key: 'VChartScatter',
   chartKey: 'VVChartScatter',
   conKey: 'VCVChartScatter',
-  title: 'VChart散点图',
+  title: '散点图-VChart',
   category: ChatCategoryEnum.SCATTER,
   categoryName: ChatCategoryEnumName.SCATTER,
   package: PackagesCategoryEnum.VCHART,
