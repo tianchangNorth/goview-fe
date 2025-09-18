@@ -113,16 +113,8 @@ VITE_PRO_PATH = 'http://127.0.0.1:8080'
 - **后端项目**: [go-view-serve](https://gitee.com/MTrun/go-view-serve)
 - **API 文档**: [接口说明](https://docs.apipost.cn/preview/5aa85d10a59d66ce/ddb813732007ad2b?target_id=84dbc5b0-158f-4bcb-8f74-793ac604ada3#3e053622-1e76-43f9-a039-756aee822dbb)
 
-## 📞 社区交流
-
-- **QQ 群**: 1030129384
-
 ## 📄 许可证
 
 [MIT License](LICENSE)
 
 ---
-
-<div align="center">
-  <strong>GoView</strong> - 让数据可视化更简单
-</div>
