@@ -6,3 +6,4 @@ dist-ssr
 .vscode
 .idea
 pnpm-lock
+vite.config.local.js
