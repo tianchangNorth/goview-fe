@@ -218,16 +218,17 @@ const handleSubmit = async (e: Event) => {
 
         window['$message'].success(t('login.login_success'))
         routerTurnByName(PageEnum.BASE_HOME_NAME, true)
+      } else {
+        // 提示
+        goDialog({
+          message: '请输入正确的用户名和密码',
+          isMaskClosable: true,
+          closeNegativeText: true,
+          transformOrigin: 'center',
+          onPositiveCallback: () => { }
+        })
       }
       loading.value = false
-      // 提示
-      goDialog({
-        message: '请输入正确的用户名和密码',
-        isMaskClosable: true,
-        closeNegativeText: true,
-        transformOrigin: 'center',
-        onPositiveCallback: () => { }
-      })
     } else {
       loading.value = false
       window['$message'].error(t('login.login_message'))
