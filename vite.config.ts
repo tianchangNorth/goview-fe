@@ -11,7 +11,7 @@ function pathResolve(dir: string) {
   return resolve(process.cwd(), '.', dir)
 }
 
-export default ({ mode }) => defineConfig({
+export default ({ mode }: { mode: string }) => defineConfig({
   base: process.env.NODE_ENV === 'production' ? './' : '/',
   // 路径重定向
   resolve: {
