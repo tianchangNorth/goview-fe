@@ -107,14 +107,15 @@
       </div>
     </div>
 
-    <div class="go-login-box-footer">
+    <!-- <div class="go-login-box-footer">
       <layout-footer></layout-footer>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import shuffle from 'lodash/shuffle'
 import { carouselInterval } from '@/settings/designSetting'
 import { useSystemStore } from '@/store/modules/systemStore/systemStore'
@@ -128,8 +129,10 @@ import { StorageEnum } from '@/enums/storageEnum'
 import { icon } from '@/plugins'
 import { routerTurnByName } from '@/utils'
 import { loginApi } from '@/api/path'
+import { goDialog } from '@/utils'
 
 const { PersonOutlineIcon, LockClosedOutlineIcon } = icon.ionicons5
+const { t } = useI18n()
 
 const formRef = ref()
 const loading = ref(false)
@@ -138,11 +141,10 @@ const show = ref(false)
 const showBg = ref(false)
 const systemStore = useSystemStore()
 
-const t = window['$t']
 
 const formInline = reactive({
-  username: 'admin',
-  password: '123456',
+  username: '',
+  password: '',
 })
 
 const rules = {
@@ -201,7 +203,7 @@ const handleSubmit = async (e: Event) => {
         username,
         password
       })
-      if(res && res.data) {
+      if (res && res.data.token) {
         const { tokenValue, tokenName } = res.data.token
         const { nickname, username, id } = res.data.userinfo
 
@@ -212,14 +214,22 @@ const handleSubmit = async (e: Event) => {
           [SystemStoreUserInfoEnum.USER_ID]: id,
           [SystemStoreUserInfoEnum.USER_NAME]: username,
           [SystemStoreUserInfoEnum.NICK_NAME]: nickname,
-          t
         })
-        
+
         window['$message'].success(t('login.login_success'))
         routerTurnByName(PageEnum.BASE_HOME_NAME, true)
       }
       loading.value = false
+      // 提示
+      goDialog({
+        message: '请输入正确的用户名和密码',
+        isMaskClosable: true,
+        closeNegativeText: true,
+        transformOrigin: 'center',
+        onPositiveCallback: () => { }
+      })
     } else {
+      loading.value = false
       window['$message'].error(t('login.login_message'))
     }
   })
@@ -249,10 +259,12 @@ $carousel-image-height: 60vh;
 * {
   box-sizing: border-box;
 }
+
 @include go(login-box) {
   height: $go-login-height;
   overflow: hidden;
   @include background-image('background-image');
+
   &-header {
     display: flex;
     justify-content: space-between;
@@ -260,6 +272,7 @@ $carousel-image-height: 60vh;
     padding: 0 40px;
     height: $--header-height;
   }
+
   &-divider {
     margin: 0;
     padding-top: 0;
@@ -273,20 +286,24 @@ $carousel-image-height: 60vh;
     margin-top: -$--header-height;
     height: $go-login-height;
     width: 100vw;
+
     &-carousel {
       width: $carousel-width;
       margin-top: 100px;
       min-width: 500px;
+
       &-img {
         display: block;
         margin: 0 auto;
         height: $carousel-image-height;
       }
     }
+
     .login-account {
       display: flex;
       flex-direction: column;
       margin: 0 160px;
+
       &-container {
         width: $width;
       }
@@ -322,15 +339,18 @@ $carousel-image-height: 60vh;
     width: 100vw;
     height: 100vh;
     background: url('@/assets/images/login/login-bg.png') no-repeat 0 -120px;
+
     .bg-slot {
       width: $carousel-width;
     }
+
     .bg-img-box {
       position: relative;
       display: flex;
       flex-wrap: wrap;
       width: 770px;
       margin-right: -20px;
+
       &-li {
         img {
           margin-right: 20px;
@@ -343,12 +363,15 @@ $carousel-image-height: 60vh;
     }
   }
 }
+
 @media only screen and (max-width: 1200px) {
+
   .bg-img-box,
   .bg-slot,
   .go-login-carousel {
     display: none !important;
   }
+
   .go-login-box-footer {
     position: relative;
   }
