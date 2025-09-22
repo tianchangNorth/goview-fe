@@ -25,9 +25,9 @@
        ></n-menu>
       </aside>
       <!-- 底部提示 -->
-      <div class="sider-bottom">
+      <!-- <div class="sider-bottom">
         <project-layout-aside-footer :collapsed="collapsed"></project-layout-aside-footer>
-      </div>
+      </div> -->
     </div>
   </n-layout-sider>
 </template>
@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, toRefs } from 'vue'
 import { ProjectLayoutCreate } from '../ProjectLayoutCreate/index'
-import { ProjectLayoutAsideFooter } from '../ProjectLayoutAsideFooter/index'
+// import { ProjectLayoutAsideFooter } from '../ProjectLayoutAsideFooter/index'
 import { asideWidth } from '@/settings/designSetting'
 import { useRoute } from 'vue-router'
 import { useSettingStore } from '@/store/modules/settingStore/settingStore'
@@ -62,7 +62,7 @@ onMounted(() => {
   window.addEventListener('resize', watchWidth)
 })
 
-onUnmounted(()=> {
+onUnmounted(() => {
   window.removeEventListener('resize', watchWidth)
 })
 </script>
@@ -73,6 +73,7 @@ $siderHeight: 100vh;
 @include go(project) {
   &-sider {
     @include fetch-bg-color('aside-background-color');
+
     &-top {
       display: flex;
       align-items: center;
@@ -81,6 +82,7 @@ $siderHeight: 100vh;
       margin-top: 30px;
       margin-bottom: 20px;
     }
+
     &-flex {
       display: flex;
       flex-direction: column;
@@ -88,9 +90,11 @@ $siderHeight: 100vh;
       height: $siderHeight;
     }
   }
+
   &-layout-sider {
     height: $siderHeight;
   }
+
   .content-top {
     top: $--header-height;
     margin-top: 1px;
