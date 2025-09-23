@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import dataJson from './data.json'
 
 export const includes = ['legend', 'xAxis', 'yAxis', 'grid']
+
 export const seriesItem = {
   type: 'bar',
   barWidth: 15,
@@ -15,8 +16,18 @@ export const seriesItem = {
     fontSize: 12
   },
   itemStyle: {
-    color: null,
+    color: '#5470c6',
     borderRadius: 2
+  },
+  // 每个柱子的颜色配置
+  itemColors: [],
+  // 渐变配置
+  gradient: {
+    enabled: false,
+    type: 'linear', // linear 或 radial
+    direction: 'vertical', // vertical 或 horizontal
+    startColor: '#667eea',
+    endColor: '#764ba2'
   }
 }
 export const option = {

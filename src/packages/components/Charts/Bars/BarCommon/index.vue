@@ -50,7 +50,119 @@ use([DatasetComponent, CanvasRenderer, BarChart, GridComponent, TooltipComponent
 const replaceMergeArr = ref<string[]>()
 
 const option = computed(() => {
-  return mergeTheme(props.chartConfig.option, props.themeSetting, includes)
+  const mergedOption = mergeTheme(props.chartConfig.option, props.themeSetting, includes)
+
+  // 处理单个柱子颜色和渐变
+  if (mergedOption.series && mergedOption.dataset) {
+    mergedOption.series.forEach((series: any, seriesIndex: number) => {
+      // 处理单个柱子颜色
+      if (series.itemColors && series.itemColors.length > 0) {
+        const colors = series.itemColors.map((itemColor: any) => itemColor.color)
+
+        // 处理渐变
+        if (series.gradient && series.gradient.enabled) {
+          series.itemStyle.color = (params: any) => {
+            const dataIndex = params.dataIndex
+            const color = colors[dataIndex] || series.itemStyle.color || '#5470c6'
+
+            if (series.gradient.type === 'linear') {
+              // 线性渐变
+              const coords = series.gradient.direction === 'vertical'
+                ? [0, 0, 0, 1] // 垂直：从上到下
+                : [0, 0, 1, 0] // 水平：从左到右
+
+              return {
+                type: 'linear',
+                x: coords[0],
+                y: coords[1],
+                x2: coords[2],
+                y2: coords[3],
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: series.gradient.startColor
+                  },
+                  {
+                    offset: 1,
+                    color: series.gradient.endColor
+                  }
+                ]
+              }
+            } else {
+              // 径向渐变
+              return {
+                type: 'radial',
+                x: 0.5,
+                y: 0.5,
+                r: 0.5,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: series.gradient.startColor
+                  },
+                  {
+                    offset: 1,
+                    color: series.gradient.endColor
+                  }
+                ]
+              }
+            }
+          }
+        } else {
+          // 纯色，为每个柱子设置不同颜色
+          series.itemStyle.color = (params: any) => {
+            return colors[params.dataIndex] || series.itemStyle.color || '#5470c6'
+          }
+        }
+      } else if (series.gradient && series.gradient.enabled) {
+        // 没有单个柱子颜色配置，但启用了渐变
+        series.itemStyle.color = (params: any) => {
+          if (series.gradient.type === 'linear') {
+            const coords = series.gradient.direction === 'vertical'
+              ? [0, 0, 0, 1]
+              : [0, 0, 1, 0]
+
+            return {
+              type: 'linear',
+              x: coords[0],
+              y: coords[1],
+              x2: coords[2],
+              y2: coords[3],
+              colorStops: [
+                {
+                  offset: 0,
+                  color: series.gradient.startColor
+                },
+                {
+                  offset: 1,
+                  color: series.gradient.endColor
+                }
+              ]
+            }
+          } else {
+            return {
+              type: 'radial',
+              x: 0.5,
+              y: 0.5,
+              r: 0.5,
+              colorStops: [
+                {
+                  offset: 0,
+                  color: series.gradient.startColor
+                },
+                {
+                  offset: 1,
+                  color: series.gradient.endColor
+                }
+              ]
+            }
+          }
+        }
+      }
+    })
+  }
+
+  return mergedOption
 })
 
 // dataset 无法变更条数的补丁
