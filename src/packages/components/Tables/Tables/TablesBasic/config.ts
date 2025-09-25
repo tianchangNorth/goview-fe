@@ -10,7 +10,8 @@ export const option = {
   dataset: { dimensions, source },
   pagination: {
     page: 1,
-    pageSize: 5
+    pageSize: 5,
+    show: true
   },
   align: 'center',
   style: {

@@ -27,7 +27,7 @@
       size="small"
       :columns="option.dataset.dimensions"
       :data="filterData"
-      :pagination="pagination"
+      :pagination="tablePagination"
     />
   </div>
 </template>
@@ -64,6 +64,10 @@ const { align, pagination, inputShow } = toRefs(props.chartConfig.option)
 pagination.value.onChange = (page: number) => {
   pagination.value.page = page
 }
+
+const tablePagination = computed(() => {
+  return pagination.value.show ? pagination.value : false
+})
 
 const { w, h } = toRefs(props.chartConfig.attr)
 

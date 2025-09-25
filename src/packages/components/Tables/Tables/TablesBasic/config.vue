@@ -15,6 +15,9 @@
       </setting-item>
     </setting-item-box>
     <setting-item-box :alone="false" name="分页设置">
+      <setting-item name="显示分页" :alone="true">
+        <n-select v-model:value="optionData.pagination.show" size="small" :options="showPaginationOptions" />
+      </setting-item>
       <setting-item name="默认页码" :alone="true">
         <n-input-number v-model:value="optionData.pagination.page" size="small" placeholder="字体大小"></n-input-number>
       </setting-item>
@@ -119,6 +122,10 @@ const borderStyleFlag = [
 const inputSelect = [
   { label: '停用', value: 'none' },
   { label: '启用', value: 'flex' }
+]
+const showPaginationOptions = [
+  { label: '显示', value: true },
+  { label: '隐藏', value: false }
 ]
 const props = defineProps({
   optionData: {

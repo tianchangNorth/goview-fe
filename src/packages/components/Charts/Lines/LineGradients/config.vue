@@ -8,6 +8,12 @@
     :expanded="true"
   >
     <SettingItemBox name="线条">
+      <SettingItem name="平滑">
+        <n-space>
+          <n-switch v-model:value="item.smooth" size="small" />
+          <n-text>平滑效果</n-text>
+        </n-space>
+      </SettingItem>
       <SettingItem name="宽度">
         <n-input-number
           v-model:value="item.lineStyle.width"

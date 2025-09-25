@@ -28,7 +28,7 @@ const option = {
   series: [
     {
       type: 'line',
-      smooth: false,
+      smooth: true,
       symbolSize: 5, //设定实心点的大小
       label: {
         show: true,
@@ -56,7 +56,7 @@ const option = {
     },
     {
       type: 'line',
-      smooth: false,
+      smooth: true,
       label: {
         show: true,
         position: 'top',

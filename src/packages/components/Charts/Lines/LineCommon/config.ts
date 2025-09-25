@@ -7,6 +7,7 @@ import dataJson from './data.json'
 export const includes = ['legend', 'xAxis', 'yAxis', 'grid']
 export const seriesItem = {
   type: 'line',
+  smooth: true,
   label: {
     show: true,
     position: 'top',
