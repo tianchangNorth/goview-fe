@@ -50,7 +50,15 @@ export const option = {
   // 指标颜色
   indicatorTextColor: '#FFFFFFFF',
   // 偏移角度
-  offsetDegree: 0
+  offsetDegree: 0,
+  // 隐藏百分比
+  hidePercentage: false,
+  // 渐变配置
+  gradient: {
+    enabled: false,
+    startColor: '#4992FFFF',
+    endColor: '#FF6B6BFF'
+  }
 }
 
 export default class Config extends PublicConfigClass implements CreateComponentType {

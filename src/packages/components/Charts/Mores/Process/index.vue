@@ -4,12 +4,13 @@
     :height="h"
     :processing="processing"
     :percentage="dataset"
-    :indicator-placement="indicatorPlacement"
-    :color="color"
+    :indicator-placement="hidePercentage ? 'none' : indicatorPlacement"
+    :color="gradient?.enabled && gradient.startColor && gradient.endColor ? { stops: [gradient.startColor, gradient.endColor] } : color"
     :rail-color="railColor"
     :offset-degree="offsetDegree"
   >
     <n-text
+      v-if="!hidePercentage"
       :style="{
         color: indicatorTextColor,
         fontSize: `${indicatorTextSize}px`
@@ -46,7 +47,9 @@ const {
   indicatorPlacement,
   indicatorTextSize,
   offsetDegree,
-  dataset
+  dataset,
+  hidePercentage,
+  gradient
 } = toRefs(props.chartConfig.option)
 
 // 手动更新

@@ -20,6 +20,18 @@
       <SettingItem name="进度条颜色">
         <n-color-picker size="small" :modes="['hex']" v-model:value="optionData.color"></n-color-picker>
       </SettingItem>
+      <SettingItem name="渐变色">
+        <n-space>
+          <n-switch v-model:value="optionData.gradient.enabled" size="small" />
+          <n-text>启用渐变</n-text>
+        </n-space>
+      </SettingItem>
+      <SettingItem v-if="optionData.gradient.enabled" name="渐变开始颜色">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="optionData.gradient.startColor"></n-color-picker>
+      </SettingItem>
+      <SettingItem v-if="optionData.gradient.enabled" name="渐变结束颜色">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="optionData.gradient.endColor"></n-color-picker>
+      </SettingItem>
       <SettingItem name="轨道颜色">
         <n-color-picker size="small" :modes="['hex']" v-model:value="optionData.railColor"></n-color-picker>
       </SettingItem>
@@ -44,6 +56,10 @@
        <setting-item name="文本大小">
         <n-input-number v-model:value="optionData.indicatorTextSize" size="small"></n-input-number>
       </setting-item>
+    </SettingItemBox>
+
+    <SettingItemBox name="百分比">
+        <n-switch :value="!optionData.hidePercentage" @update:value="(val: any) => optionData.hidePercentage = !val" />
     </SettingItemBox>
   </CollapseItem>
 </template>
