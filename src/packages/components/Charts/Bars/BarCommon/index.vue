@@ -61,6 +61,7 @@ const option = computed(() => {
 
         // 处理渐变
         if (series.gradient && series.gradient.enabled) {
+          // 启用渐变时，更新图例颜色为渐变起始色
           series.itemStyle.color = (params: any) => {
             const dataIndex = params.dataIndex
             const color = colors[dataIndex] || series.itemStyle.color || '#5470c6'
@@ -108,11 +109,15 @@ const option = computed(() => {
               }
             }
           }
+          // 更新图例颜色为渐变起始色
+          series.color = series.gradient.startColor
         } else {
           // 纯色，为每个柱子设置不同颜色
           series.itemStyle.color = (params: any) => {
             return colors[params.dataIndex] || series.itemStyle.color || '#5470c6'
           }
+          // 恢复图例颜色为默认色
+          series.color = series.itemStyle.color || '#5470c6'
         }
       } else if (series.gradient && series.gradient.enabled) {
         // 没有单个柱子颜色配置，但启用了渐变
@@ -158,6 +163,11 @@ const option = computed(() => {
             }
           }
         }
+        // 更新图例颜色为渐变起始色
+        series.color = series.gradient.startColor
+      } else {
+        // 确保在没有渐变时图例颜色正确
+        series.color = series.itemStyle.color || '#5470c6'
       }
     })
   }

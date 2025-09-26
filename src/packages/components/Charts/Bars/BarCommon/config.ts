@@ -9,6 +9,7 @@ export const includes = ['legend', 'xAxis', 'yAxis', 'grid']
 export const seriesItem = {
   type: 'bar',
   barWidth: 15,
+  barGap: '20%', // 柱子之间的间隔，百分比或像素值
   label: {
     show: true,
     position: 'top',

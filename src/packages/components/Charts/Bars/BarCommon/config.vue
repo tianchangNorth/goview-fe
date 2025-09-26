@@ -12,6 +12,30 @@
           placeholder="自动计算"
         ></n-input-number>
       </SettingItem>
+      <SettingItem name="间隔">
+        <n-input-group>
+          <n-input-number
+            v-model:value="barGapNumber"
+            :min="-100"
+            :max="200"
+            size="small"
+            placeholder="20"
+            @update:value="updateBarGap"
+          ></n-input-number>
+          <n-select
+            v-model:value="barGapUnit"
+            size="small"
+            :options="[
+              { label: '%', value: '%' },
+              { label: 'px', value: 'px' }
+            ]"
+            @update:value="updateBarGap"
+          ></n-select>
+        </n-input-group>
+        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+          提示：负值表示重叠，正值表示间隔，推荐使用百分比
+        </div>
+      </SettingItem>
       <SettingItem name="圆角">
         <n-input-number v-model:value="item.itemStyle.borderRadius" :min="0" size="small"></n-input-number>
       </SettingItem>
@@ -82,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, ref } from 'vue'
+import { PropType, computed, ref, watch } from 'vue'
 import { GlobalSetting, CollapseItem, SettingItemBox, SettingItem } from '@/components/Pages/ChartItemSetting'
 import { GlobalThemeJsonType } from '@/settings/chartThemes/index'
 
@@ -96,5 +120,43 @@ const props = defineProps({
 const seriesList = computed(() => {
   return props.optionData.series
 })
+
+// 柱子间隔配置
+const barGapNumber = ref(20)
+const barGapUnit = ref('%')
+
+// 解析当前柱子间隔值
+const parseBarGap = (barGap: string | number | undefined) => {
+  if (!barGap) {
+    barGapNumber.value = 20
+    barGapUnit.value = '%'
+    return
+  }
+
+  const barGapStr = String(barGap)
+  if (barGapStr.endsWith('%')) {
+    barGapNumber.value = parseInt(barGapStr.replace('%', ''))
+    barGapUnit.value = '%'
+  } else {
+    barGapNumber.value = parseInt(barGapStr)
+    barGapUnit.value = 'px'
+  }
+}
+
+// 更新柱子间隔
+const updateBarGap = () => {
+  const newValue = barGapNumber.value || 0
+  const newUnit = barGapUnit.value
+  seriesList.value.forEach((item: any) => {
+    item.barGap = `${newValue}${newUnit}`
+  })
+}
+
+// 监听系列变化，初始化柱子间隔值
+watch(() => seriesList.value, (newSeries) => {
+  if (newSeries && newSeries.length > 0) {
+    parseBarGap(newSeries[0].barGap)
+  }
+}, { immediate: true, deep: true })
 
 </script>
