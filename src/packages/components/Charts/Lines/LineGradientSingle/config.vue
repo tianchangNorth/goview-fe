@@ -17,6 +17,12 @@
       </SettingItem>
     </SettingItemBox>
     <SettingItemBox name="实心点">
+      <SettingItem name="显示">
+        <n-space>
+          <n-switch v-model:value="item.showSymbol" size="small" />
+          <n-text>显示实心点</n-text>
+        </n-space>
+      </SettingItem>
       <SettingItem name="大小">
         <n-input-number
           v-model:value="item.symbolSize"

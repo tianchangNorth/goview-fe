@@ -29,6 +29,7 @@ const option = {
     {
       type: 'line',
       smooth: true,
+      showSymbol: true, //是否显示实心点
       symbolSize: 5, //设定实心点的大小
       label: {
         show: true,
@@ -57,6 +58,8 @@ const option = {
     {
       type: 'line',
       smooth: true,
+      showSymbol: true, //是否显示实心点
+      symbolSize: 5, //设定实心点的大小
       label: {
         show: true,
         position: 'top',

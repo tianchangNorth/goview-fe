@@ -27,6 +27,7 @@ export const option = {
   series: [
     {
       type: 'line',
+      showSymbol: true, //是否显示实心点
       symbolSize: 5, //设定实心点的大小
       lineStyle: {
         type: 'solid',

@@ -8,6 +8,7 @@ export const includes = ['legend', 'xAxis', 'yAxis', 'grid']
 export const seriesItem = {
   type: 'line',
   smooth: true,
+  showSymbol: true, //是否显示实心点
   label: {
     show: true,
     position: 'top',
