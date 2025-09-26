@@ -14,7 +14,6 @@
       :style="`
       width: ${w}px;
       height: ${h}px;
-      font-size: ${option.style.fontSize}px;
       border-width: ${option.style.border === 'on' ? option.style.borderWidth : 0}px;
       border-color: ${option.style.borderColor};
       border-style: ${option.style.borderStyle};
@@ -25,7 +24,13 @@
       --n-td-color-hover: transparent !important;
       --n-th-color-striped: transparent !important;
       --n-td-color-striped: transparent !important;
-      background-color: transparent !important`"
+      background-color: transparent !important;
+      --header-font-size: ${option.style.headerFontSize}px;
+      --header-font-color: ${option.style.headerFontColor};
+      --header-font-weight: ${option.style.headerFontWeight};
+      --body-font-size: ${option.style.bodyFontSize}px;
+      --body-font-color: ${option.style.bodyFontColor};
+      --body-font-weight: ${option.style.bodyFontWeight};`"
       :bordered="option.style.border === 'on'"
       :single-column="option.style.singleColumn === 'on'"
       :single-line="option.style.singleLine === 'on'"
@@ -165,10 +170,16 @@ useChartDataFetch(props.chartConfig, useChartEditStore, (newData: any) => {
 
 :global(.n-data-table .n-data-table-th) {
   background-color: transparent !important;
+  font-size: var(--header-font-size, 16px) !important;
+  color: var(--header-font-color, #ffffff) !important;
+  font-weight: var(--header-font-weight, bold) !important;
 }
 
 :global(.n-data-table .n-data-table-td) {
   background-color: transparent !important;
+  font-size: var(--body-font-size, 14px) !important;
+  color: var(--body-font-color, #ffffff) !important;
+  font-weight: var(--body-font-weight, normal) !important;
 }
 
 /* Additional aggressive transparency targeting */

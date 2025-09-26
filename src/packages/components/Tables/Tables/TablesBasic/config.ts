@@ -23,7 +23,15 @@ export const option = {
     fontSize: 16,
     borderWidth: 0,
     borderColor: 'black',
-    borderStyle: 'solid'
+    borderStyle: 'solid',
+    // Header styling
+    headerFontSize: 16,
+    headerFontColor: '#ffffff',
+    headerFontWeight: 'bold',
+    // Body styling
+    bodyFontSize: 14,
+    bodyFontColor: '#ffffff',
+    bodyFontWeight: 'normal'
   },
   inputShow: 'none'
 }

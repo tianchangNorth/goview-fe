@@ -60,12 +60,49 @@
           placeholder="字体大小"
         ></n-input-number>
       </setting-item>
+    </setting-item-box>
+
+    <setting-item-box :alone="false" name="表头样式">
+      <setting-item name="字体大小" :alone="true">
+        <n-input-number
+          v-model:value="optionData.style.headerFontSize"
+          :min="12"
+          size="small"
+          placeholder="表头字体大小"
+        ></n-input-number>
+      </setting-item>
+      <setting-item name="字体颜色" :alone="true">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="optionData.style.headerFontColor"></n-color-picker>
+      </setting-item>
+      <setting-item name="字体粗细" :alone="true">
+        <n-select v-model:value="optionData.style.headerFontWeight" size="small" :options="fontWeightOptions" />
+      </setting-item>
+    </setting-item-box>
+
+    <setting-item-box :alone="false" name="表体样式">
+      <setting-item name="字体大小" :alone="true">
+        <n-input-number
+          v-model:value="optionData.style.bodyFontSize"
+          :min="12"
+          size="small"
+          placeholder="表体字体大小"
+        ></n-input-number>
+      </setting-item>
+      <setting-item name="字体颜色" :alone="true">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="optionData.style.bodyFontColor"></n-color-picker>
+      </setting-item>
+      <setting-item name="字体粗细" :alone="true">
+        <n-select v-model:value="optionData.style.bodyFontWeight" size="small" :options="fontWeightOptions" />
+      </setting-item>
+    </setting-item-box>
+
+    <setting-item-box :alone="false" name="表格样式">
       <setting-item name="边框宽度" :alone="true">
         <n-input-number
           v-model:value="optionData.style.borderWidth"
           :min="0"
           size="small"
-          placeholder="字体大小"
+          placeholder="边框宽度"
         ></n-input-number>
       </setting-item>
       <setting-item name="边框颜色" :alone="true">
@@ -126,6 +163,21 @@ const inputSelect = [
 const showPaginationOptions = [
   { label: '显示', value: true },
   { label: '隐藏', value: false }
+]
+const fontWeightOptions = [
+  { label: '正常', value: 'normal' },
+  { label: '粗体', value: 'bold' },
+  { label: '较粗', value: 'bolder' },
+  { label: '较细', value: 'lighter' },
+  { label: '100', value: '100' },
+  { label: '200', value: '200' },
+  { label: '300', value: '300' },
+  { label: '400', value: '400' },
+  { label: '500', value: '500' },
+  { label: '600', value: '600' },
+  { label: '700', value: '700' },
+  { label: '800', value: '800' },
+  { label: '900', value: '900' }
 ]
 const props = defineProps({
   optionData: {
