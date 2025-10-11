@@ -147,7 +147,7 @@ export const openGiteeSourceCode = () => {
  * @returns boolean
  */
 export const isPreview = () => {
-  return document.location.hash.includes('preview')
+  return document.location.pathname.includes('preview')
 }
 
 /**
@@ -170,7 +170,7 @@ export const fetchRouteParams = () => {
 export const fetchRouteParamsLocation = () => {
   try {
     // 防止添加query参数的时候，解析ID异常
-    return document.location.hash.split('?')[0].split('/').pop() || ''
+    return document.location.pathname.split('?')[0].split('/').pop() || ''
   } catch (error) {
     window['$message'].warning('查询路由信息失败，请联系管理员！')
     return ''
