@@ -46,7 +46,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
-import { useClipboard } from '@vueuse/core'
 import { PreviewEnum } from '@/enums/pageEnum'
 import { StorageEnum } from '@/enums/storageEnum'
 import { ResultEnum } from '@/enums/httpEnum'
@@ -54,6 +53,7 @@ import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore
 import { syncData } from '../../ContentEdit/components/EditTools/hooks/useSyncUpdate.hook'
 import { ProjectInfoEnum } from '@/store/modules/chartEditStore/chartEditStore.d'
 import { changeProjectReleaseApi } from '@/api/path'
+import copy from 'copy-to-clipboard';
 import {
   previewPath,
   renderIcon,
@@ -71,7 +71,6 @@ const { BrowsersOutlineIcon, SendIcon, AnalyticsIcon, CloseIcon } = icon.ionicon
 const chartEditStore = useChartEditStore()
 
 const previewPathRef = ref(previewPath())
-const { copy, isSupported } = useClipboard({ source: previewPathRef })
 
 const routerParamsInfo = useRoute()
 
@@ -127,11 +126,17 @@ const modelShowHandle = () => {
 
 // 复制预览地址
 const copyPreviewPath = (successText?: string, failureText?: string) => {
-  if (isSupported) {
-    copy()
-    window['$message'].success(successText || '复制成功！')
-  } else {
-    window['$message'].error(failureText || '复制失败！')
+  try {
+    const result = copy(previewPathRef.value)
+
+    if (result) {
+      window['$message'].success(successText || '复制成功！')
+    } else {
+      window['$message'].error(failureText || '复制失败，请手动复制地址')
+    }
+  } catch (error) {
+    console.error('复制失败:', error)
+    window['$message'].error(failureText || '复制失败，请手动复制地址')
   }
 }
 
@@ -196,6 +201,7 @@ const comBtnList = computed(() => {
   min-width: 100px;
   max-width: 60vw;
   padding-bottom: 20px;
+
   @include deep() {
     .n-list-item:not(:last-child) {
       border-bottom: 0;
