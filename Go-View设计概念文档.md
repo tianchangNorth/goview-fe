@@ -623,6 +623,724 @@ watch(
 - **用户行为**: 用户交互分析
 - **系统健康**: 服务状态监控
 
+## 8. 画布数据与图表数据存储流转机制
+
+### 8.1 数据存储架构概览
+
+Go-View 实现了一个完整的画布数据与图表数据存储流转系统，支持从编辑、预览到发布的全生命周期数据管理。系统采用多层存储架构，确保数据的一致性和可追溯性。
+
+#### 核心存储结构 (Pinia Store)
+**位置**: `src/store/modules/chartEditStore/chartEditStore.ts`
+
+**主要数据结构**:
+- **项目信息** (`projectInfo`): projectId, projectName, remarks, thumbnail, release
+- **画布配置** (`editCanvasConfig`): 宽高、背景、滤镜、主题等
+- **组件列表** (`componentList`): 图表组件实例数组
+- **全局请求配置** (`requestGlobalConfig`): 数据源配置
+
+#### 图表组件数据结构
+**类型定义**: `src/packages/index.d.ts`
+
+```typescript
+interface CreateComponentType {
+  // 基础配置
+  key: string
+  chartConfig: ConfigType
+  option: GlobalThemeJsonType
+
+  // 样式变换
+  styles: {
+    position, size, rotate, filter, animations
+  }
+
+  // 数据配置
+  request: RequestConfigType
+
+  // 事件系统
+  events: baseEvent, advancedEvents, interactEvents
+}
+```
+
+### 8.2 数据流转机制
+
+#### 编辑阶段数据流
+**入口**: `src/views/chart/hooks/useSync.hook.ts`
+
+**数据加载** (`dataSyncFetch`):
+1. 从后端API获取项目数据
+2. 解析JSON内容并更新Store
+3. 动态注册图表组件
+
+**数据保存** (`dataSyncUpdate`):
+1. 生成画布缩略图
+2. 上传缩略图到OSS
+3. 序列化Store数据为JSON
+4. 调用`saveProjectApi`保存到后端
+
+#### 预览阶段数据流
+**预览数据传递**: `src/views/chart/ContentHeader/headerRightBtn/index.vue`
+
+1. **SessionStorage缓存**: 将当前编辑数据存入浏览器会话存储
+2. **路由跳转**: 跳转到 `/chart/preview/:id` 预览页面
+3. **数据加载**: `src/views/preview/utils/storage.ts`
+   - 优先从SessionStorage读取（本地预览）
+   - 未发布时从API获取后端数据
+   - 直接赋值给chartEditStore
+
+#### 发布阶段数据流
+**发布操作**: `src/views/chart/ContentHeader/headerRightBtn/index.vue`
+
+1. **状态切换**: 调用`changeProjectReleaseApi`更新发布状态
+2. **数据验证**: 预览页检查发布状态，未发布跳转提示页
+3. **访问控制**: 只有已发布的大屏才能通过预览URL访问
+
+### 8.3 数据同步策略
+
+#### 自动保存机制
+- **定时保存**: 每`saveInterval`秒自动保存
+- **节流保存**: 使用`throttle`限制保存频率为3秒一次
+- **实时同步**: Store变化触发同步状态更新
+
+#### 数据版本兼容
+- **画布补丁**: `canvasVersionUpdatePolyfill` 处理旧数据兼容
+- **组件补丁**: `componentVersionUpdatePolyfill` 处理组件事件兼容
+- **智能合并**: `componentMerge` 合并新旧配置，保留用户自定义设置
+
+### 8.4 存储介质层级
+
+#### 四层存储架构
+1. **内存层**: Pinia Store (实时数据)
+2. **会话层**: SessionStorage (预览临时数据)
+3. **持久层**: 后端数据库 (保存的JSON数据)
+4. **文件层**: OSS (缩略图文件)
+
+#### 数据同步流程
+```
+内存 ↔ SessionStorage ↔ 后端API ↔ 数据库
+ ↓
+OSS (缩略图)
+```
+
+### 8.5 组件注册与生命周期
+
+#### 动态组件注册
+```typescript
+// 组件动态注册流程
+const updateComponent = async (projectData: ChartEditStorage) => {
+  // 1. 清除现有组件
+  chartEditStore.componentList = []
+
+  // 2. 注册新组件
+  projectData.componentList.forEach(async (e) => {
+    // 动态注册组件到Vue实例
+    window['$vue'].component(target.chartConfig.chartKey, fetchChartComponent(target.chartConfig))
+    window['$vue'].component(target.chartConfig.conKey, fetchConfigComponent(target.chartConfig))
+  })
+
+  // 3. 创建组件实例
+  const create = async (_componentInstance) => {
+    let newComponent = await createComponent(_componentInstance.chartConfig)
+    // 合并配置并添加到组件列表
+    chartEditStore.addComponentList(componentMerge(newComponent, _componentInstance))
+  }
+}
+```
+
+#### 组件创建工厂
+```typescript
+// src/packages/index.ts
+export const createComponent = async (targetData: ConfigType) => {
+  const { redirectComponent, category, key } = targetData
+  if (redirectComponent) {
+    // 重定向组件处理
+    const [packageName, categoryName, keyName] = redirectComponent.split('/')
+    const redirectChart = await loadConfig(packageName, categoryName, keyName)
+    return new redirectChart.default()
+  }
+  // 标准组件加载
+  const chart = await loadConfig(targetData.package, category, key)
+  return new chart.default()
+}
+```
+
+### 8.6 数据持久化机制
+
+#### 项目数据结构
+```typescript
+export interface ChartEditStorage {
+  editCanvasConfig: EditCanvasConfigType    // 画布配置
+  componentList: ComponentType[]            // 组件列表
+  requestGlobalConfig: RequestConfigType    // 全局请求配置
+}
+```
+
+#### 数据序列化与反序列化
+```typescript
+// 保存数据
+const dataSyncUpdate = async () => {
+  // 1. 生成缩略图
+  const canvasImage = await html2canvas(range)
+
+  // 2. 上传缩略图
+  const uploadRes = await uploadFile(uploadParams)
+
+  // 3. 保存JSON数据
+  let params = new FormData()
+  params.append('projectId', projectId)
+  params.append('content', JSONStringify(chartEditStore.getStorageInfo()))
+  const res = await saveProjectApi(params)
+}
+
+// 加载数据
+const dataSyncFetch = async () => {
+  const res = await fetchProjectApi({ projectId: fetchRouteParamsLocation() })
+  if (res && res.code === ResultEnum.SUCCESS) {
+    updateStoreInfo(res.data)
+    await updateComponent(JSONParse(res.data.content))
+  }
+}
+```
+
+### 8.7 预览与发布数据管理
+
+#### 预览数据传递
+```typescript
+// 预览函数
+const previewHandle = () => {
+  const storageInfo = chartEditStore.getStorageInfo()
+  const sessionStorageInfo = getSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST) || []
+
+  // 更新或添加预览数据
+  const previewData = { id: previewId, ...storageInfo }
+  setSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST, [...sessionStorageInfo, previewData])
+
+  // 跳转预览页面
+  routerTurnByPath(path, [previewId], undefined, true)
+}
+```
+
+#### 发布状态管理
+```typescript
+// 发布处理
+const sendHandle = async () => {
+  const res = await changeProjectReleaseApi({
+    id: fetchRouteParamsLocation(),
+    state: release.value ? -1 : 1  // -1未发布, 1发布
+  })
+
+  if (res && res.code === ResultEnum.SUCCESS) {
+    chartEditStore.setProjectInfo(ProjectInfoEnum.RELEASE, !release.value)
+    // 自动复制预览地址
+    copyPreviewPath('发布成功！已复制地址到剪贴板~')
+  }
+}
+```
+
+### 8.8 数据一致性保障
+
+#### 版本兼容处理
+- **数据补丁**: 自动处理版本升级带来的数据结构变化
+- **默认值填充**: 为缺失的配置项提供默认值
+- **类型验证**: 确保数据类型的正确性
+
+#### 错误处理与恢复
+- **数据校验**: 保存前验证数据完整性
+- **回滚机制**: 操作失败时自动回滚
+- **降级处理**: 部分功能失败时保证基本功能可用
+
+### 8.9 性能优化
+
+#### 数据加载优化
+- **按需加载**: 组件配置按需动态加载
+- **缓存机制**: 组件注册缓存避免重复加载
+- **分批处理**: 大量组件分批处理避免阻塞
+
+#### 内存管理
+- **及时清理**: 组件卸载时清理事件监听器
+- **引用管理**: 避免循环引用导致的内存泄漏
+- **垃圾回收**: 主动触发垃圾回收释放内存
+
+这个数据存储流转机制通过**统一的状态管理(Pinia)** + **临时会话存储** + **后端API持久化**的三层架构，实现了画布和图表数据在编辑、预览、发布流程中的完整闭环流转，确保了数据的一致性、可靠性和高性能。
+
+## 9. 画布实现与拖拽系统
+
+### 9.1 画布DOM架构
+
+#### 核心DOM层级结构
+**主容器**: `src/views/chart/ContentEdit/index.vue`
+
+```html
+<!-- 画布主体结构 -->
+<content-box id="go-chart-edit-layout">
+  <edit-rule>
+    <div id="go-chart-edit-content">
+      <edit-range>
+        <!-- 滤镜预览层 -->
+        <div :style="filterStyle">
+          <!-- 图表组件层 -->
+          <div v-for="item in componentList">
+            <edit-shape-box>
+              <component :is="item.chartConfig.chartKey"></component>
+            </edit-shape-box>
+          </div>
+        </div>
+        <!-- 辅助功能层 -->
+        <edit-watermark></edit-watermark>
+        <edit-align-line></edit-align-line>
+        <edit-select></edit-select>
+      </edit-range>
+    </div>
+  </edit-rule>
+</content-box>
+```
+
+#### 画布容器实现
+**位置**: `src/views/chart/ContentEdit/components/EditRange/index.vue`
+
+```typescript
+const rangeStyle = computed(() => {
+  // 缩放处理
+  const scale = {
+    transform: `scale(${getEditCanvas.value.scale})`
+  }
+  return { ...useSizeStyle(size.value), ...scale }
+})
+```
+
+**架构特点**:
+- **分层设计**: 滤镜层、组件层、辅助层分离
+- **缩放适配**: 通过CSS transform实现画布缩放
+- **响应式布局**: 基于画布配置的自适应布局
+
+### 9.2 拖拽系统核心逻辑
+
+#### 9.2.1 工具栏拖拽到画布
+**入口**: `src/views/chart/ContentEdit/hooks/useDrag.hook.ts:16`
+
+```typescript
+export const dragHandle = async (e: DragEvent) => {
+  e.preventDefault()
+
+  // 获取拖拽数据
+  const drayDataString = e!.dataTransfer!.getData(DragKeyEnum.DRAG_KEY)
+  const dropData: ConfigType = JSONParse(drayDataString)
+
+  // 创建新组件
+  let newComponent: CreateComponentType = await createComponent(dropData)
+
+  // 设置位置 - 以鼠标位置为中心
+  setComponentPosition(
+    newComponent,
+    e.offsetX - newComponent.attr.w / 2,
+    e.offsetY - newComponent.attr.h / 2
+  )
+
+  // 添加到组件列表并选中
+  chartEditStore.addComponentList(newComponent, false, true)
+  chartEditStore.setTargetSelectChart(newComponent.id)
+}
+```
+
+**流程特点**:
+- **异步组件创建**: 支持动态加载和组件注册
+- **位置计算**: 以鼠标点击位置为组件中心
+- **自动选中**: 拖拽完成后自动选中新组件
+
+#### 9.2.2 组件移动拖拽
+**核心逻辑**: `src/views/chart/ContentEdit/hooks/useDrag.hook.ts:196`
+
+```typescript
+const mousedownHandle = (e: MouseEvent, item) => {
+  // 记录初始位置
+  const startX = e.screenX
+  const startY = e.screenY
+  const scale = chartEditStore.getEditCanvas.scale
+
+  // 记录组件初始位置（支持多选）
+  const targetMap = new Map()
+  chartEditStore.getTargetChart.selectId.forEach(id => {
+    const { x, y, w, h } = chartEditStore.getComponentList[index].attr
+    targetMap.set(id, { x, y, w, h })
+  })
+
+  // 拖拽移动 - 节流处理
+  const mousemove = throttle((moveEvent: MouseEvent) => {
+    // 计算偏移量（考虑缩放比例）
+    let offsetX = (moveEvent.screenX - startX) / scale
+    let offsetY = (moveEvent.screenY - startY) / scale
+
+    // 更新组件位置
+    chartEditStore.getTargetChart.selectId.forEach(id => {
+      const { x, y } = targetMap.get(id)
+      const currX = Math.round(x + offsetX)
+      const currY = Math.round(y + offsetY)
+
+      // 边界检测
+      const boundedX = Math.max(-w + 50, Math.min(currX, canvasWidth - 50))
+      const boundedY = Math.max(-h + 50, Math.min(currY, canvasHeight - 50))
+
+      componentInstance.attr = { x: boundedX, y: boundedY }
+    })
+  }, 20)
+}
+```
+
+**技术亮点**:
+- **多选支持**: 同时移动多个选中组件
+- **坐标转换**: 自动处理缩放比例的坐标换算
+- **边界限制**: 防止组件拖出画布范围
+- **性能优化**: 使用throttle限制触发频率
+
+#### 9.2.3 框选功能
+**实现**: `src/views/chart/ContentEdit/hooks/useDrag.hook.ts:70`
+
+```typescript
+export const mousedownBoxSelect = (e: MouseEvent) => {
+  const startOffsetX = e.offsetX
+  const startOffsetY = e.offsetY
+  const scale = chartEditStore.getEditCanvas.scale
+
+  const mousemove = throttle((moveEvent: MouseEvent) => {
+    // 计算框选区域
+    const currX = startOffsetX + moveEvent.screenX - startScreenX
+    const currY = startOffsetY + moveEvent.screenY - startScreenY
+
+    // 计算选框的左上角和右下角坐标
+    const selectAttr = { x1: 0, y1: 0, x2: 0, y2: 0 }
+
+    // 根据拖拽方向计算选框范围
+    if (currX > startOffsetX && currY > startOffsetY) {
+      // 右下方向
+      selectAttr.x1 = startOffsetX
+      selectAttr.y1 = startOffsetY
+      selectAttr.x2 = Math.round(startOffsetX + (moveEvent.screenX - startScreenX) / scale)
+      selectAttr.y2 = Math.round(startOffsetY + (moveEvent.screenY - startScreenY) / scale)
+    }
+    // ... 其他方向处理
+
+    // 遍历组件，判断是否在选框内
+    chartEditStore.getComponentList.forEach(item => {
+      const { x, y, w, h } = item.attr
+      const targetAttr = { x1: x, y1: y, x2: x + w, y2: y + h }
+
+      // 全包含检测
+      if (targetAttr.x1 >= selectAttr.x1 && targetAttr.y1 >= selectAttr.y1 &&
+          targetAttr.x2 <= selectAttr.x2 && targetAttr.y2 <= selectAttr.y2) {
+        chartEditStore.setTargetSelectChart(item.id, true)
+      }
+    })
+  }, 30)
+}
+```
+
+**框选特性**:
+- **方向自适应**: 支持任意方向的框选拖拽
+- **精确计算**: 考虑缩放比例的坐标计算
+- **包含检测**: 只有完全包含在框选内的组件才被选中
+- **状态过滤**: 跳过锁定和隐藏的组件
+
+### 9.3 坐标系统与位置计算
+
+#### 9.3.1 组件样式计算
+**位置**: `src/views/chart/ContentEdit/hooks/useStyle.hook.ts`
+
+```typescript
+export const useComponentStyle = (attr: AttrType, index: number) => {
+  const componentStyle = {
+    zIndex: index + 1,
+    left: `${attr.x}px`,
+    top: `${attr.y}px`
+  }
+  return componentStyle
+}
+
+export const useSizeStyle = (attr: AttrType, scale?: number) => {
+  return {
+    width: `${scale ? scale * attr.w : attr.w}px`,
+    height: `${scale ? scale * attr.h : attr.h}px`
+  }
+}
+```
+
+#### 9.3.2 坐标转换系统
+
+**坐标系定义**:
+- **屏幕坐标**: 浏览器窗口坐标系
+- **画布坐标**: 画布内容坐标系（考虑缩放）
+- **组件坐标**: 组件相对画布的位置
+
+**转换公式**:
+```typescript
+// 屏幕坐标 → 画布坐标
+const canvasX = (screenX - startX) / scale
+const canvasY = (screenY - startY) / scale
+
+// 画布坐标 → DOM样式
+const domStyle = {
+  left: `${canvasX}px`,
+  top: `${canvasY}px`
+}
+```
+
+### 9.4 组件选择与对齐机制
+
+#### 9.4.1 选择状态管理
+**位置**: `src/views/chart/ContentEdit/components/EditShapeBox/index.vue`
+
+```typescript
+const select = computed(() => {
+  const id = props.item.id
+  if (props.item.status.lock) return false
+  return chartEditStore.getTargetChart.selectId.find((e: string) => e === id)
+})
+
+const hover = computed(() => {
+  const isDrag = chartEditStore.getEditCanvas[EditCanvasTypeEnum.IS_DRAG]
+  if (isDrag) return false
+  if (props.item.status.lock) return false
+  return props.item.id === chartEditStore.getTargetChart.hoverId
+})
+```
+
+#### 9.4.2 智能对齐线系统
+**核心实现**: `src/views/chart/ContentEdit/components/EditAlignLine/index.vue`
+
+```typescript
+watch(
+  () => chartEditStore.getMousePosition,
+  throttle(() => {
+    // 计算当前组件的参考线
+    const selectLeftX = selectAttr.value.x
+    const selectHalfX = selectLeftX + selectW / 2
+    const selectRightX = selectLeftX + selectW
+    const seletX = [selectLeftX, selectHalfX, selectRightX]
+
+    // 6条对齐线：上下左右 + 两条中线
+    line.lineArr.forEach(lineItem => {
+      componentList.forEach(component => {
+        // 吸附判定 - 在设定距离内自动对齐
+        if (isSorption(selectLeftX, componentLeftX)) {
+          line.select.set('coll', { x: componentLeftX })
+          setComponentPosition(selectTarget.value, componentLeftX, selectTopY)
+        }
+      })
+    })
+  }, 200)
+)
+```
+
+**对齐线类型**:
+- **横向线**: 3条（上边界、中线、下边界）
+- **纵向线**: 3条（左边界、中线、右边界）
+- **吸附距离**: 可配置的吸附阈值
+
+#### 9.4.3 吸附算法
+```typescript
+const isSorption = (selectValue: number, componentValue: number) => {
+  const minDistance = settingStore.getChartAlignRange
+  return Math.abs(selectValue - componentValue) <= minDistance
+}
+```
+
+### 9.5 缩放与视口管理
+
+#### 9.5.1 画布缩放系统
+**实现位置**: `src/views/chart/ContentEdit/components/EditRange/index.vue`
+
+```typescript
+const rangeStyle = computed(() => {
+  const scale = {
+    transform: `scale(${getEditCanvas.value.scale})`
+  }
+  return { ...useSizeStyle(size.value), ...scale }
+})
+```
+
+#### 9.5.2 预览缩放模式
+**位置**: `src/views/preview/hooks/useScale.hook.ts`
+
+```typescript
+switch (localStorageInfo.editCanvasConfig.previewScaleType) {
+  case PreviewScaleEnum.FIT:        // 自适应屏幕
+  case PreviewScaleEnum.SCROLL_Y:   // Y轴滚动
+  case PreviewScaleEnum.SCROLL_X:   // X轴滚动
+  case PreviewScaleEnum.FULL:       // 全屏显示
+}
+```
+
+#### 9.5.3 鼠标滚轮缩放
+```typescript
+// Ctrl + 滚轮缩放
+addEventListener('wheel', (e: any) => {
+  if (window?.$KeyboardActive?.ctrl) {
+    const currentScale = parseFloat(transform.match(/scale\((\d+\.?\d*)/)[1])
+    if (e.wheelDelta > 0) {
+      previewRef.value.style.transform = `scale(${Math.min(currentScale + 0.1, 5)})`
+    } else {
+      previewRef.value.style.transform = `scale(${Math.max(currentScale - 0.1, 0.2)})`
+    }
+  }
+})
+```
+
+**缩放特性**:
+- **范围限制**: 0.2x ~ 5x 缩放范围
+- **实时更新**: 滚轮操作实时反映缩放效果
+- **快捷键支持**: Ctrl + 滚轮触发缩放
+
+### 9.6 框选与选择可视化
+
+#### 9.6.1 框选显示
+**位置**: `src/views/chart/ContentEdit/components/EditSelect/index.vue`
+
+```typescript
+watch(
+  () => chartEditStore.getMousePosition,
+  positionInfo => {
+    const { startX, startY, x, y } = positionInfo
+
+    // 根据拖拽方向计算选框属性
+    const attr = { x: 0, y: 0, w: 0, h: 0 }
+    if (x > startX && y > startY) {
+      // 右下方向
+      attr.x = startX
+      attr.y = startY
+      attr.w = Math.round((x - startX) / scale.value)
+      attr.h = Math.round((y - startY) / scale.value)
+    }
+    // ... 其他方向处理
+
+    positionStyle.value = {
+      ...useComponentStyle(attr, selectBoxIndex),
+      ...useSizeStyle(attr)
+    }
+  }
+)
+```
+
+#### 9.6.2 选择框样式
+```scss
+.edit-select {
+  .select-border {
+    border-width: 1px;
+    border-style: solid;
+    border-color: v-bind('themeColor');
+  }
+  .select-background {
+    background-color: v-bind('themeColor');
+    opacity: 0.08;
+  }
+}
+```
+
+### 9.7 锚点调整大小
+
+#### 9.7.1 锚点布局
+**位置**: `src/views/chart/ContentEdit/hooks/useStyle.hook.ts`
+
+```typescript
+export const usePointStyle = (point: string, attr) => {
+  const { w: width, h: height } = attr
+
+  const isTop = /t/.test(point)
+  const isBottom = /b/.test(point)
+  const isLeft = /l/.test(point)
+  const isRight = /r/.test(point)
+
+  // 8个锚点：4个角 + 4个边中点
+  if (point.length === 2) {
+    // 四个角的点
+    newLeft = isLeft ? 0 : width
+    newTop = isTop ? 0 : height
+  } else {
+    // 边缘中点
+    if (isTop || isBottom) {
+      newLeft = width / 2
+      newTop = isTop ? 0 : height
+    }
+    if (isLeft || isRight) {
+      newLeft = isLeft ? 0 : width
+      newTop = Math.floor(height / 2)
+    }
+  }
+
+  return {
+    left: `${newLeft}px`,
+    top: `${newTop}px`,
+    cursor: cursorResize[index] + '-resize'
+  }
+}
+```
+
+#### 9.7.2 大小调整逻辑
+**核心实现**: `src/views/chart/ContentEdit/hooks/useDrag.hook.ts:343`
+
+```typescript
+export const useMousePointHandle = (e: MouseEvent, point: string, attr) => {
+  const mousemove = throttle((moveEvent: MouseEvent) => {
+    let currX = Math.round((moveEvent.screenX - startX) / scale)
+    let currY = Math.round((moveEvent.screenY - startY) / scale)
+
+    const isTop = /t/.test(point)
+    const isBottom = /b/.test(point)
+    const isLeft = /l/.test(point)
+    const isRight = /r/.test(point)
+
+    // 计算新的宽高和位置
+    const newHeight = itemAttrH + (isTop ? -currY : isBottom ? currY : 0)
+    const newWidth = itemAttrW + (isLeft ? -currX : isRight ? currX : 0)
+
+    // 更新属性
+    attr.h = newHeight > 0 ? newHeight : 0
+    attr.w = newWidth > 0 ? newWidth : 0
+    attr.x = itemAttrX + (isLeft ? currX : 0)
+    attr.y = itemAttrY + (isTop ? currY : 0)
+  }, 50)
+}
+```
+
+**锚点特性**:
+- **8点调整**: 4个角点 + 4个边中点
+- **智能光标**: 根据拖拽方向显示对应光标
+- **实时预览**: 拖拽时实时显示大小变化
+- **最小限制**: 防止组件缩小到0或负数
+
+### 9.8 性能优化策略
+
+#### 9.8.1 事件处理优化
+- **节流控制**: 拖拽和框选使用 `throttle` 限制触发频率
+- **事件委托**: 利用事件冒泡减少监听器数量
+- **计算缓存**: 使用 Vue 计算属性缓存样式计算结果
+
+#### 9.8.2 渲染优化
+- **按需渲染**: 只渲染可见区域的组件
+- **样式缓存**: 避免重复计算相同的样式
+- **DOM复用**: 组件移动时复用DOM节点
+
+#### 9.8.3 内存管理
+- **及时清理**: 组件销毁时清理事件监听器
+- **引用管理**: 避免循环引用导致的内存泄漏
+- **状态重置**: 拖拽结束后重置相关状态
+
+### 9.9 用户体验设计
+
+#### 9.9.1 交互反馈
+- **视觉反馈**: 悬停、选中、拖拽状态的视觉变化
+- **对齐辅助**: 智能对齐线和吸附效果
+- **边界提示**: 组件接近边界时的视觉提示
+
+#### 9.9.2 操作便利性
+- **多选操作**: Ctrl + 点击、框选支持
+- **快捷键支持**: Delete删除、Ctrl+C/V复制粘贴
+- **右键菜单**: 上下文相关的操作菜单
+
+#### 9.9.3 精确控制
+- **像素级定位**: 支持精确的像素级位置调整
+- **网格对齐**: 可选的网格对齐功能
+- **尺寸微调**: 锚点拖拽和数值输入相结合
+
+这个画布和拖拽系统展现了现代化可视化编辑器的完整实现，通过精心的架构设计、性能优化和用户体验考虑，为用户提供了专业级的拖拽编辑体验。
+
 ## 总结
 
 Go-View 项目展现了现代化前端架构的最佳实践：
@@ -630,7 +1348,8 @@ Go-View 项目展现了现代化前端架构的最佳实践：
 1. **技术先进性**: 采用最新的 Vue3 + TypeScript 技术栈
 2. **架构合理性**: 清晰的模块化和组件化设计
 3. **功能丰富性**: 完整的可视化编辑功能
-4. **性能优越性**: 多层次性能优化策略
-5. **扩展灵活性**: 良好的插件和扩展机制
+4. **数据流转性**: 完善的存储流转机制和数据生命周期管理
+5. **性能优越性**: 多层次性能优化策略
+6. **扩展灵活性**: 良好的插件和扩展机制
 
-该项目为企业级数据可视化应用提供了一个坚实的技术基础，体现了现代前端开发的成熟度和专业性。通过合理的设计模式选择、完善的状态管理、优化的性能策略和灵活的扩展机制，Go-View 成功构建了一个功能强大、易于维护的数据可视化平台。
+该项目为企业级数据可视化应用提供了一个坚实的技术基础，体现了现代前端开发的成熟度和专业性。通过合理的设计模式选择、完善的状态管理、优化的性能策略、灵活的扩展机制以及完整的数据存储流转系统，Go-View 成功构建了一个功能强大、易于维护的数据可视化平台。
