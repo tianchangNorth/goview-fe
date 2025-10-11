@@ -14,7 +14,7 @@ function pathResolve(dir: string) {
 
 export default ({ mode }: { mode: string }) => {
   const baseConfig = defineConfig({
-    base: process.env.NODE_ENV === 'production' ? './' : '/',
+    base: '/',
     // 路径重定向
     resolve: {
       alias: [
@@ -82,11 +82,15 @@ export default ({ mode }: { mode: string }) => {
     build: {
       target: 'es2020',
       outDir: OUTPUT_DIR,
+      // 确保 history 模式下的资源路径正确
+      assetsDir: 'static',
       // minify: 'terser', // 如果需要用terser混淆，可打开这两行
       // terserOptions: terserOptions,
       rollupOptions: rollupOptions,
       reportCompressedSize: brotliSize,
-      chunkSizeWarningLimit: chunkSizeWarningLimit
+      chunkSizeWarningLimit: chunkSizeWarningLimit,
+      // 确保 manifest 生成正确
+      manifest: true
     }
   })
 
