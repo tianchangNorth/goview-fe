@@ -1,6 +1,6 @@
 import { onUnmounted } from 'vue';
 import html2canvas from 'html2canvas'
-import { getUUID, httpErrorHandle, fetchRouteParamsLocation, base64toFile, JSONStringify, JSONParse } from '@/utils'
+import { getUUID, fetchRouteParamsLocation, base64toFile, JSONStringify, JSONParse } from '@/utils'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
 import { EditCanvasTypeEnum, ChartEditStoreEnum, ProjectInfoEnum, ChartEditStorage } from '@/store/modules/chartEditStore/chartEditStore.d'
 import { useChartHistoryStore } from '@/store/modules/chartHistoryStore/chartHistoryStore'
@@ -257,7 +257,7 @@ export const useSync = () => {
           // 更新全局数据
           await updateComponent(JSONParse(res.data.content))
           return
-        }else {
+        } else {
           chartEditStore.setProjectInfo(ProjectInfoEnum.PROJECT_ID, fetchRouteParamsLocation())
         }
         setTimeout(() => {
@@ -268,16 +268,15 @@ export const useSync = () => {
       chartEditStore.setEditCanvas(EditCanvasTypeEnum.SAVE_STATUS, SyncEnum.FAILURE)
     } catch (error) {
       chartEditStore.setEditCanvas(EditCanvasTypeEnum.SAVE_STATUS, SyncEnum.FAILURE)
-      httpErrorHandle()
     }
   }
 
   // * 数据保存
   const dataSyncUpdate = throttle(async (updateImg = true) => {
-    if(!fetchRouteParamsLocation()) return
+    if (!fetchRouteParamsLocation()) return
 
     let projectId = chartEditStore.getProjectInfo[ProjectInfoEnum.PROJECT_ID];
-    if(projectId === null || projectId === ''){
+    if (projectId === null || projectId === '') {
       window['$message'].error('数据初未始化成功,请刷新页面！')
       return
     }
@@ -301,7 +300,7 @@ export const useSync = () => {
         uploadParams.append('object', base64toFile(canvasImage.toDataURL(), `${fetchRouteParamsLocation()}_index_preview.png`))
         const uploadRes = await uploadFile(uploadParams)
         // 保存预览图
-        if(uploadRes && uploadRes.code === ResultEnum.SUCCESS) {
+        if (uploadRes && uploadRes.code === ResultEnum.SUCCESS) {
           if (uploadRes.data.fileurl) {
             await updateProjectApi({
               id: fetchRouteParamsLocation(),
@@ -323,7 +322,7 @@ export const useSync = () => {
     let params = new FormData()
     params.append('projectId', projectId)
     params.append('content', JSONStringify(chartEditStore.getStorageInfo() || {}))
-    const res= await saveProjectApi(params)
+    const res = await saveProjectApi(params)
 
     if (res && res.code === ResultEnum.SUCCESS) {
       // 成功状态
