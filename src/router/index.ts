@@ -22,6 +22,7 @@ const RootRoute: Array<RouteRecordRaw> = [
       modules.projectRoutes,
       modules.chartRoutes,
       modules.previewRoutes,
+      modules.publishedRoutes,
       modules.editRoutes
     ]
   }

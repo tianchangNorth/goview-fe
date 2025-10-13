@@ -1,6 +1,6 @@
 import { ref } from 'vue'
-import { ChartEnum } from '@/enums/pageEnum'
-import { fetchPathByName, routerTurnByPath, openNewWindow, previewPath } from '@/utils'
+import { ChartEnum, PreviewEnum, PublishEnum } from '@/enums/pageEnum'
+import { fetchPathByName, routerTurnByPath, openNewWindow } from '@/utils'
 import { Chartype } from '../../../index.d'
 export const useModalDataInit = () => {
   const modalShow = ref<boolean>(false)
@@ -26,9 +26,19 @@ export const useModalDataInit = () => {
     routerTurnByPath(path, [cardData.id], undefined, true)
   }
 
-  // 预览处理
+  // 预览/发布处理
   const previewHandle = (cardData: Chartype) => {
-    openNewWindow(previewPath(cardData.id))
+    if (!cardData) return
+
+    const { origin } = document.location
+    const path = cardData.release
+      ? fetchPathByName(PublishEnum.CHART_PUBLISHED_NAME, 'href')
+      : fetchPathByName(PreviewEnum.CHART_PREVIEW_NAME, 'href')
+
+    if (!path) return
+
+    const url = `${origin}${path}/${cardData.id}`
+    openNewWindow(url)
   }
 
   return {

@@ -22,8 +22,8 @@
 
       <n-list-item>
         <n-space :size="10">
-          <n-alert :show-icon="false" title="预览地址：" type="success">
-            {{ previewPath() }}
+          <n-alert :show-icon="false" :title="release ? '发布地址：' : '预览地址：'" type="success">
+            {{ previewPathRef }}
           </n-alert>
           <n-space vertical>
             <n-button tertiary type="primary" @click="copyPreviewPath()"> 复制地址 </n-button>
@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
-import { PreviewEnum } from '@/enums/pageEnum'
+import { PreviewEnum, PublishEnum } from '@/enums/pageEnum'
 import { StorageEnum } from '@/enums/storageEnum'
 import { ResultEnum } from '@/enums/httpEnum'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
@@ -55,7 +55,6 @@ import { ProjectInfoEnum } from '@/store/modules/chartEditStore/chartEditStore.d
 import { changeProjectReleaseApi } from '@/api/path'
 import copy from 'copy-to-clipboard';
 import {
-  previewPath,
   renderIcon,
   fetchPathByName,
   routerTurnByPath,
@@ -69,10 +68,24 @@ import { cloneDeep } from 'lodash'
 
 const { BrowsersOutlineIcon, SendIcon, AnalyticsIcon, CloseIcon } = icon.ionicons5
 const chartEditStore = useChartEditStore()
-
-const previewPathRef = ref(previewPath())
-
 const routerParamsInfo = useRoute()
+
+const previewPathRef = computed(() => {
+  const { id } = routerParamsInfo.params
+  const projectId = typeof id === 'string' ? id : id[0]
+
+  if (!projectId) return ''
+
+  const { origin } = document.location
+  const path = release.value
+    ? fetchPathByName(PublishEnum.CHART_PUBLISHED_NAME, 'href')
+    : fetchPathByName(PreviewEnum.CHART_PREVIEW_NAME, 'href')
+
+  if (!path) return ''
+
+  // 直接使用完整的路径，不重复拼接pathname
+  return `${origin}${path}/${projectId}`
+})
 
 const modelShow = ref<boolean>(false)
 const release = ref<boolean>(false)
@@ -86,37 +99,60 @@ const closeHandle = () => {
   modelShow.value = false
 }
 
-// 预览
+// 预览/发布
 const previewHandle = () => {
-  const path = fetchPathByName(PreviewEnum.CHART_PREVIEW_NAME, 'href')
-  if (!path) return
   const { id } = routerParamsInfo.params
-  // id 标识
-  const previewId = typeof id === 'string' ? id : id[0]
-  const storageInfo = chartEditStore.getStorageInfo()
-  const sessionStorageInfo = getSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST) || []
-
-  if (sessionStorageInfo?.length) {
-    const repeateIndex = sessionStorageInfo.findIndex((e: { id: string }) => e.id === previewId)
-    // 重复替换
-    if (repeateIndex !== -1) {
-      sessionStorageInfo.splice(repeateIndex, 1, {
-        id: previewId,
-        ...storageInfo
-      })
-      setSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST, sessionStorageInfo)
-    } else {
-      sessionStorageInfo.push({
-        id: previewId,
-        ...storageInfo
-      })
-      setSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST, sessionStorageInfo)
-    }
-  } else {
-    setSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST, [{ id: previewId, ...storageInfo }])
+  if (!id) {
+    window['$message'].error('项目ID不存在')
+    return
   }
-  // 跳转
-  routerTurnByPath(path, [previewId], undefined, true)
+
+  // id 标识
+  const projectId = typeof id === 'string' ? id : id[0]
+  const isPublished = release.value
+
+  // 根据发布状态选择路由
+  const path = isPublished
+    ? fetchPathByName(PublishEnum.CHART_PUBLISHED_NAME, 'href')
+    : fetchPathByName(PreviewEnum.CHART_PREVIEW_NAME, 'href')
+
+  if (!path) {
+    window['$message'].error('路由配置错误')
+    return
+  }
+
+  // 预览模式：需要同步当前编辑数据到sessionStorage
+  if (!isPublished) {
+    const storageInfo = chartEditStore.getStorageInfo()
+    const sessionStorageInfo = getSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST) || []
+
+    if (sessionStorageInfo?.length) {
+      const repeatIndex = sessionStorageInfo.findIndex((e: { id: string }) => e.id === projectId)
+      // 重复替换
+      if (repeatIndex !== -1) {
+        sessionStorageInfo.splice(repeatIndex, 1, {
+          id: projectId,
+          ...storageInfo
+        })
+        setSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST, sessionStorageInfo)
+      } else {
+        sessionStorageInfo.push({
+          id: projectId,
+          ...storageInfo
+        })
+        setSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST, sessionStorageInfo)
+      }
+    } else {
+      setSessionStorage(StorageEnum.GO_CHART_STORAGE_LIST, [{ id: projectId, ...storageInfo }])
+    }
+  }
+
+  // 跳转到对应页面
+  routerTurnByPath(path, [projectId], undefined, true)
+
+  // 显示提示信息
+  const actionText = isPublished ? '查看发布页面' : '预览页面'
+  window['$message'].success(`正在${actionText}...`)
 }
 
 // 模态弹窗
@@ -171,7 +207,7 @@ const btnList = [
   },
   {
     key: 'preview',
-    title: () => '预览',
+    title: () => (release.value ? '查看' : '预览'),
     type: () => 'default',
     icon: renderIcon(BrowsersOutlineIcon),
     event: previewHandle

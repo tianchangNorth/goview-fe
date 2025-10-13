@@ -82,8 +82,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, PropType } from 'vue'
-import { renderIcon, renderLang,  requireErrorImg } from '@/utils'
+import { reactive, ref, PropType, computed } from 'vue'
+import { renderIcon, renderLang, requireErrorImg } from '@/utils'
 import { icon } from '@/plugins'
 import { MacOsControlBtn } from '@/components/Tips/MacOsControlBtn'
 import { Chartype } from '../../index.d'
@@ -118,9 +118,9 @@ const fnBtnList = reactive([
   }
 ])
 
-const selectOptions = ref([
+const selectOptions = computed(() => [
   {
-    label: renderLang('global.r_preview'),
+    label: props.cardData?.release ? '查看' : renderLang('global.r_preview'),
     key: 'preview',
     icon: renderIcon(BrowsersOutlineIcon)
   },
@@ -183,14 +183,17 @@ const resizeHandle = () => {
 
 <style lang="scss" scoped>
 $contentHeight: 180px;
+
 @include go('items-list-card') {
   position: relative;
   border-radius: $--border-radius-base;
   border: 1px solid rgba(0, 0, 0, 0);
   @extend .go-transition;
+
   &:hover {
     @include hover-border-color('hover-border-color');
   }
+
   .list-content {
     margin-top: 20px;
     margin-bottom: 5px;
@@ -198,16 +201,19 @@ $contentHeight: 180px;
     border-radius: $--border-radius-base;
     @include background-image('background-point');
     @extend .go-point-bg;
+
     &-top {
       position: absolute;
       top: 10px;
       left: 10px;
       height: 22px;
     }
+
     &-img {
       height: $contentHeight;
       @extend .go-flex-center;
       @extend .go-border-radius;
+
       @include deep() {
         img {
           @extend .go-border-radius;
@@ -215,10 +221,12 @@ $contentHeight: 180px;
       }
     }
   }
+
   .list-footer {
     flex-wrap: nowrap;
     justify-content: space-between;
     line-height: 30px;
+
     &-ri {
       justify-content: flex-end;
       min-width: 180px;

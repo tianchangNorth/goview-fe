@@ -12,6 +12,12 @@ export enum PreviewEnum {
   CHART_PREVIEW_NAME = 'ChartPreview',
 }
 
+export enum PublishEnum {
+  //  图表预览
+  CHART_PUBLISHED = '/chart/published/:id(.*)*',
+  CHART_PUBLISHED_NAME = 'ChartPublished',
+}
+
 export enum EditEnum {
   //  图表JSON编辑
   CHART_EDIT = '/chart/edit/:id(.*)*',
