@@ -1,9 +1,15 @@
 <template>
   <div class="go-decorates-number" :style="`width:${w}px;height:${h}px;`">
     <div
-      :style="`color:${timeColor};font-size:${timeSize}px;line-height:${timeLineHeight}px;
-      letter-spacing:${timeTextIndent}px;font-weight:${fontWeight};
-      text-shadow: ${boxShadow}`"
+      :style="{
+        fontSize: `${timeSize}px`,
+        lineHeight: `${timeLineHeight}px`,
+        letterSpacing: `${timeTextIndent}px`,
+        fontWeight: fontWeight,
+        textShadow: boxShadow,
+        ...gradientStyle,
+        ...(gradient?.enabled ? {} : { color: timeColor })
+      }"
     >
       {{ newData }}
     </div>
@@ -11,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, toRefs, ref, reactive, watch, onMounted, onUnmounted } from 'vue'
+import { PropType, toRefs, ref, watch, onMounted, onUnmounted, computed } from 'vue'
 import { CreateComponentType } from '@/packages/index.d'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
 import { useChartDataFetch } from '@/hooks'
@@ -29,12 +35,56 @@ let boxShadow = ref('none')
 let timer: any = null
 const { w, h } = toRefs(props.chartConfig.attr)
 
+// 计算渐变色样式
+const gradientStyle = computed(() => {
+  if (!gradient.value?.enabled) {
+    return {}
+  }
+
+  const { type, direction, angle, startColor, startColorStop, endColor, endColorStop, useCustomStops } = gradient.value
+
+  if (type === 'linear') {
+    const gradientAngle = angle || (direction === 'horizontal' ? 90 : direction === 'vertical' ? 180 : 360)
+
+    let gradientColors = ''
+    if (useCustomStops) {
+      // 使用自定义位置
+      gradientColors = `${startColor} ${startColorStop}%, ${endColor} ${endColorStop}%`
+    } else {
+      // 使用默认位置
+      gradientColors = `${startColor}, ${endColor}`
+    }
+
+    return {
+      background: `linear-gradient(${gradientAngle}deg, ${gradientColors})`,
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text'
+    }
+  } else {
+    let gradientColors = ''
+    if (useCustomStops) {
+      gradientColors = `${startColor} ${startColorStop}%, ${endColor} ${endColorStop}%`
+    } else {
+      gradientColors = `${startColor}, ${endColor}`
+    }
+
+    return {
+      background: `radial-gradient(circle, ${gradientColors})`,
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text'
+    }
+  }
+})
+
 let {
   timeColor,
   timeSize,
   timeLineHeight,
   timeTextIndent,
   fontWeight,
+  gradient,
   showShadow,
   hShadow,
   vShadow,

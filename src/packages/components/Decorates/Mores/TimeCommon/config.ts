@@ -22,6 +22,19 @@ export const option = {
   timeColor: '#E6F7FF',
   fontWeight: 'normal',
 
+  // 渐变配置
+  gradient: {
+    enabled: false,
+    type: 'linear', // linear 或 radial
+    direction: 'horizontal', // horizontal 或 vertical
+    angle: 360, // 自定义角度（0-360度）
+    startColor: '#FFFFFF',
+    startColorStop: 1.18, // 起始颜色位置（百分比）
+    endColor: '#5D98FF',
+    endColorStop: 100, // 结束颜色位置（百分比）
+    useCustomStops: false // 是否使用自定义位置
+  },
+
   //阴影
   showShadow:  true,
   hShadow: 0,
