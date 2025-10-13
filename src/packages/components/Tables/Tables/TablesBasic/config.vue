@@ -94,6 +94,15 @@
       <setting-item name="字体粗细" :alone="true">
         <n-select v-model:value="optionData.style.bodyFontWeight" size="small" :options="fontWeightOptions" />
       </setting-item>
+      <setting-item name="行高" :alone="true">
+        <n-input-number
+          v-model:value="optionData.style.rowHeight"
+          :min="20"
+          :max="200"
+          size="small"
+          placeholder="行高"
+        ></n-input-number>
+      </setting-item>
     </setting-item-box>
 
     <setting-item-box :alone="false" name="表格样式">

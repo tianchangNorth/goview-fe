@@ -31,7 +31,9 @@ export const option = {
     // Body styling
     bodyFontSize: 14,
     bodyFontColor: '#ffffff',
-    bodyFontWeight: 'normal'
+    bodyFontWeight: 'normal',
+    // Row height
+    rowHeight: 40
   },
   inputShow: 'none'
 }

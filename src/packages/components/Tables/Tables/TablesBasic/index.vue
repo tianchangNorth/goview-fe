@@ -30,7 +30,8 @@
       --header-font-weight: ${option.style.headerFontWeight};
       --body-font-size: ${option.style.bodyFontSize}px;
       --body-font-color: ${option.style.bodyFontColor};
-      --body-font-weight: ${option.style.bodyFontWeight};`"
+      --body-font-weight: ${option.style.bodyFontWeight};
+      --row-height: ${option.style.rowHeight}px;`"
       :bordered="option.style.border === 'on'"
       :single-column="option.style.singleColumn === 'on'"
       :single-line="option.style.singleLine === 'on'"
@@ -173,6 +174,8 @@ useChartDataFetch(props.chartConfig, useChartEditStore, (newData: any) => {
   font-size: var(--header-font-size, 16px) !important;
   color: var(--header-font-color, #ffffff) !important;
   font-weight: var(--header-font-weight, bold) !important;
+  height: var(--row-height, 40px) !important;
+  line-height: var(--row-height, 40px) !important;
 }
 
 :global(.n-data-table .n-data-table-td) {
@@ -180,6 +183,8 @@ useChartDataFetch(props.chartConfig, useChartEditStore, (newData: any) => {
   font-size: var(--body-font-size, 14px) !important;
   color: var(--body-font-color, #ffffff) !important;
   font-weight: var(--body-font-weight, normal) !important;
+  height: var(--row-height, 40px) !important;
+  line-height: var(--row-height, 40px) !important;
 }
 
 /* Additional aggressive transparency targeting */
