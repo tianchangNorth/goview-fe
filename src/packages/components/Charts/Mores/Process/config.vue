@@ -38,6 +38,18 @@
       <setting-item name="偏移角度" v-if="optionData.type !== types[0].value">
         <n-input-number v-model:value="optionData.offsetDegree" size="small"></n-input-number>
       </setting-item>
+      <setting-item name="缺口角度" v-if="optionData.type === types[2].value">
+        <n-input-number
+          v-model:value="optionData.gapDegree"
+          size="small"
+          :min="0"
+          :max="360"
+          placeholder="75"
+        ></n-input-number>
+        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+          控制仪表盘进度条缺口角度（0-360度）
+        </div>
+      </setting-item>
       <SettingItem v-if="optionData.type == types[0].value">
         <n-space>
           <n-switch v-model:value="optionData.processing" size="small" />

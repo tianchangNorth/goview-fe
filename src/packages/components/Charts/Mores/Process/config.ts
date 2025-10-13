@@ -51,6 +51,8 @@ export const option = {
   indicatorTextColor: '#FFFFFFFF',
   // 偏移角度
   offsetDegree: 0,
+  // 缺口角度（仪表盘进度条使用，控制缺口大小）
+  gapDegree: 75,
   // 隐藏百分比
   hidePercentage: false,
   // 渐变配置

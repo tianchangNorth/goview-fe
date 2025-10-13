@@ -8,6 +8,7 @@
     :color="gradient?.enabled && gradient.startColor && gradient.endColor ? { stops: [gradient.startColor, gradient.endColor] } : color"
     :rail-color="railColor"
     :offset-degree="offsetDegree"
+    :gap-degree="gapDegree"
   >
     <n-text
       v-if="!hidePercentage"
@@ -36,7 +37,7 @@ const props = defineProps({
 })
 
 // 取配置数据
-const { w, h } = toRefs(props.chartConfig.attr)
+const { h } = toRefs(props.chartConfig.attr)
 const {
   type,
   unit,
@@ -47,6 +48,7 @@ const {
   indicatorPlacement,
   indicatorTextSize,
   offsetDegree,
+  gapDegree,
   dataset,
   hidePercentage,
   gradient
