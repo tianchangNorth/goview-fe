@@ -60,8 +60,19 @@ watch(
       if (!isObject(newData) || !('dimensions' in newData)) return
       if (Array.isArray(newData?.dimensions)) {
         const seriesArr = []
+        const currentSeries = props.chartConfig.option.series || []
         for (let i = 0; i < newData.dimensions.length - 1; i++) {
-          seriesArr.push(cloneDeep(seriesItem))
+          // 保留现有series的配置，如果不存在则使用默认配置
+          if (currentSeries[i]) {
+            const existingSeries = cloneDeep(currentSeries[i])
+            // 确保必要的属性存在，但保留用户自定义设置
+            seriesArr.push({
+              ...seriesItem,
+              ...existingSeries
+            })
+          } else {
+            seriesArr.push(cloneDeep(seriesItem))
+          }
         }
         replaceMergeArr.value = ['series']
         props.chartConfig.option.series = seriesArr
