@@ -8,6 +8,39 @@ import dataJson from './data.json'
 
 export const includes = ['legend', 'xAxis', 'yAxis', 'grid']
 
+// 创建单个series配置的函数
+export const createSeriesItem = (colorIndex: number) => {
+  return {
+    type: 'line',
+    smooth: true,
+    showSymbol: true, //是否显示实心点
+    symbolSize: 5, //设定实心点的大小
+    label: {
+      show: true,
+      position: 'top',
+      color: '#fff',
+      fontSize: 12
+    },
+    lineStyle: {
+      width: 3,
+      type: 'solid'
+    },
+    areaStyle: {
+      opacity: 0.8,
+      color: new graphic.LinearGradient(0, 0, 0, 1, [
+        {
+          offset: 0,
+          color: chartColorsSearch[defaultTheme][colorIndex]
+        },
+        {
+          offset: 1,
+          color: 'rgba(0,0,0,0)'
+        }
+      ])
+    }
+  }
+}
+
 const option = {
   tooltip: {
     show: true,
@@ -26,64 +59,8 @@ const option = {
   },
   dataset: { ...dataJson },
   series: [
-    {
-      type: 'line',
-      smooth: true,
-      showSymbol: true, //是否显示实心点
-      symbolSize: 5, //设定实心点的大小
-      label: {
-        show: true,
-        position: 'top',
-        color: '#fff',
-        fontSize: 12
-      },
-      lineStyle: {
-        width: 3,
-        type: 'solid'
-      },
-      areaStyle: {
-        opacity: 0.8,
-        color: new graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: chartColorsSearch[defaultTheme][3]
-          },
-          {
-            offset: 1,
-            color: 'rgba(0,0,0,0)'
-          }
-        ])
-      }
-    },
-    {
-      type: 'line',
-      smooth: true,
-      showSymbol: true, //是否显示实心点
-      symbolSize: 5, //设定实心点的大小
-      label: {
-        show: true,
-        position: 'top',
-        color: '#fff',
-        fontSize: 12
-      },
-      lineStyle: {
-        width: 3,
-        type: 'solid'
-      },
-      areaStyle: {
-        opacity: 0.8,
-        color: new graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: chartColorsSearch[defaultTheme][4]
-          },
-          {
-            offset: 1,
-            color: 'rgba(0,0,0,0)'
-          }
-        ])
-      }
-    }
+    createSeriesItem(3),
+    createSeriesItem(4)
   ]
 }
 
