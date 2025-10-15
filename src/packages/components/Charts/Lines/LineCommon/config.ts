@@ -24,6 +24,12 @@ export const seriesItem = {
     type: 'solid',
     width: 3,
     color: null
+  },
+  // 自定义颜色配置
+  customColor: {
+    enabled: false,
+    lineColor: '',
+    itemColor: ''
   }
 }
 

@@ -21,6 +21,18 @@
       <SettingItem name="类型">
         <n-select v-model:value="item.lineStyle.type" size="small" :options="lineConf.lineStyle.type"></n-select>
       </SettingItem>
+      <SettingItem name="自定义颜色">
+        <n-space>
+          <n-switch v-model:value="item.customColor.enabled" size="small" />
+          <n-text>启用自定义颜色</n-text>
+        </n-space>
+      </SettingItem>
+      <SettingItem v-if="item.customColor.enabled" name="线条颜色">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="item.customColor.lineColor" placeholder="线条颜色"></n-color-picker>
+      </SettingItem>
+      <SettingItem v-if="item.customColor.enabled" name="实心点颜色">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="item.customColor.itemColor" placeholder="实心点颜色"></n-color-picker>
+      </SettingItem>
     </SettingItemBox>
     <SettingItemBox name="实心点">
       <SettingItem name="显示">

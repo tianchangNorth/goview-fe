@@ -49,13 +49,34 @@ use([DatasetComponent, CanvasRenderer, LineChart, GridComponent, TooltipComponen
 const replaceMergeArr = ref<string[]>()
 
 const option = computed(() => {
-  return mergeTheme(props.chartConfig.option, props.themeSetting, includes)
+  const mergedOption = mergeTheme(props.chartConfig.option, props.themeSetting, includes)
+
+  // 应用自定义颜色
+  if (mergedOption.series) {
+    mergedOption.series.forEach((series: any) => {
+      if (series.customColor?.enabled) {
+        // 设置线条颜色
+        if (series.customColor.lineColor) {
+          if (!series.lineStyle) series.lineStyle = {}
+          series.lineStyle.color = series.customColor.lineColor
+        }
+
+        // 设置实心点颜色
+        if (series.customColor.itemColor) {
+          if (!series.itemStyle) series.itemStyle = {}
+          series.itemStyle.color = series.customColor.itemColor
+        }
+      }
+    })
+  }
+
+  return mergedOption
 })
 
 // dataset 无法变更条数的补丁
 watch(
   () => props.chartConfig.option.dataset,
-  (newData: { dimensions: any }, oldData) => {
+  (newData: { dimensions: any }) => {
     try {
       if (!isObject(newData) || !('dimensions' in newData)) return
       if (Array.isArray(newData?.dimensions)) {
@@ -68,7 +89,9 @@ watch(
             // 确保必要的属性存在，但保留用户自定义设置
             seriesArr.push({
               ...seriesItem,
-              ...existingSeries
+              ...existingSeries,
+              // 保留自定义颜色配置
+              customColor: existingSeries.customColor || cloneDeep(seriesItem.customColor)
             })
           } else {
             seriesArr.push(cloneDeep(seriesItem))
