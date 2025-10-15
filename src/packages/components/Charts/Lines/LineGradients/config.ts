@@ -37,6 +37,13 @@ export const createSeriesItem = (colorIndex: number) => {
           color: 'rgba(0,0,0,0)'
         }
       ])
+    },
+    // 自定义颜色配置
+    customColor: {
+      enabled: false,
+      lineColor: '',
+      gradientStart: '',
+      gradientEnd: 'rgba(0,0,0,0)'
     }
   }
 }

@@ -29,6 +29,21 @@
           :options="lineConf.lineStyle.type"
         ></n-select>
       </SettingItem>
+      <SettingItem name="自定义颜色">
+        <n-space>
+          <n-switch v-model:value="item.customColor.enabled" size="small" />
+          <n-text>启用自定义颜色</n-text>
+        </n-space>
+      </SettingItem>
+      <SettingItem v-if="item.customColor && item.customColor.enabled" name="线条颜色">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="item.customColor.lineColor" placeholder="线条颜色"></n-color-picker>
+      </SettingItem>
+      <SettingItem v-if="item.customColor && item.customColor.enabled" name="渐变开始颜色">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="item.customColor.gradientStart" placeholder="渐变开始颜色"></n-color-picker>
+      </SettingItem>
+      <SettingItem v-if="item.customColor && item.customColor.enabled" name="渐变结束颜色">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="item.customColor.gradientEnd" placeholder="渐变结束颜色"></n-color-picker>
+      </SettingItem>
     </SettingItemBox>
     <SettingItemBox name="实心点">
       <SettingItem name="显示">
@@ -101,7 +116,25 @@ const props = defineProps({
   },
 })
 
+// 确保series都有customColor配置
+const ensureCustomColorConfig = (series: any[]) => {
+  series.forEach((item: any) => {
+    if (!item.customColor) {
+      item.customColor = {
+        enabled: false,
+        lineColor: '',
+        gradientStart: '',
+        gradientEnd: 'rgba(0,0,0,0)'
+      }
+    }
+  })
+}
+
 const seriesList = computed(() => {
-  return props.optionData.series
+  const series = props.optionData.series
+  if (Array.isArray(series)) {
+    ensureCustomColorConfig(series)
+  }
+  return series
 })
 </script>

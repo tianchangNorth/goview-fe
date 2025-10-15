@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, PropType, nextTick, ref } from 'vue'
+import { reactive, watch, PropType, nextTick, ref, computed } from 'vue'
 import VChart from 'vue-echarts'
 import { useCanvasInitOptions } from '@/hooks/useCanvasInitOptions.hook'
 import { use, graphic } from 'echarts/core'
@@ -55,6 +55,37 @@ const option = reactive({
 
 const replaceMergeArr = ref<string[]>()
 
+// 应用自定义颜色的函数
+const applyCustomColors = (series: any[]) => {
+  series.forEach((item: any) => {
+    if (item.customColor?.enabled) {
+      // 应用自定义线条颜色
+      if (item.customColor.lineColor) {
+        if (!item.lineStyle) item.lineStyle = {}
+        item.lineStyle.color = item.customColor.lineColor
+      }
+
+      // 应用自定义渐变色
+      if (item.customColor.gradientStart) {
+        const startColor = item.customColor.gradientStart
+        const endColor = item.customColor.gradientEnd || 'rgba(0,0,0,0)'
+
+        if (!item.areaStyle) item.areaStyle = {}
+        item.areaStyle.color = new graphic.LinearGradient(0, 0, 0, 1, [
+          {
+            offset: 0,
+            color: startColor
+          },
+          {
+            offset: 1,
+            color: endColor
+          }
+        ])
+      }
+    }
+  })
+}
+
 // 渐变色处理
 watch(
   () => chartEditStore.getEditCanvasConfig.chartThemeColor,
@@ -65,22 +96,29 @@ watch(
           colorGradientCustomMerge(chartEditStore.getEditCanvasConfig.chartCustomThemeColorInfo)[newColor] ||
           colorGradientCustomMerge(chartEditStore.getEditCanvasConfig.chartCustomThemeColorInfo)[defaultTheme]
         props.chartConfig.option.series.forEach((value: any, index: number) => {
-          // 使用循环的颜色索引，支持任意数量的series
-          const colorIndex = (index % (chartColorsSearch[defaultTheme].length - 3)) + 3
-          value.areaStyle.color = new graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 0,
-              color: themeColor[colorIndex]
-            },
-            {
-              offset: 1,
-              color: 'rgba(0,0,0, 0)'
-            }
-          ])
+          // 确保customColor配置存在
+          if (!value.customColor) {
+            value.customColor = cloneDeep(createSeriesItem(0).customColor)
+          }
+
+          // 只有在没有启用自定义颜色时才更新默认颜色
+          if (!value.customColor.enabled) {
+            const colorIndex = (index % (chartColorsSearch[defaultTheme].length - 3)) + 3
+            value.areaStyle.color = new graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: themeColor[colorIndex]
+              },
+              {
+                offset: 1,
+                color: 'rgba(0,0,0, 0)'
+              }
+            ])
+          }
         })
       }
-      option.value = mergeTheme(props.chartConfig.option, props.themeSetting, includes)
-      props.chartConfig.option = option.value
+      // 更新配置，让计算属性处理自定义颜色
+      props.chartConfig.option = mergeTheme(props.chartConfig.option, props.themeSetting, includes)
     } catch (error) {
       console.log(error)
     }
@@ -108,18 +146,22 @@ watch(
             // 保留现有series的配置，如果不存在则创建新的
             if (currentSeries[i]) {
               const existingSeries = cloneDeep(currentSeries[i])
-              // 更新颜色以支持新的索引
-              const colorIndex = (i % (chartColorsSearch[defaultTheme].length - 3)) + 3
-              existingSeries.areaStyle.color = new graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: themeColor[colorIndex]
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(0,0,0, 0)'
-                }
-              ])
+              // 只有在没有启用自定义颜色时才更新默认颜色
+              if (!existingSeries.customColor?.enabled) {
+                const colorIndex = (i % (chartColorsSearch[defaultTheme].length - 3)) + 3
+                existingSeries.areaStyle.color = new graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: themeColor[colorIndex]
+                  },
+                  {
+                    offset: 1,
+                    color: 'rgba(0,0,0, 0)'
+                  }
+                ])
+              }
+              // 保留自定义颜色配置
+              existingSeries.customColor = existingSeries.customColor || cloneDeep(createSeriesItem(0).customColor)
               seriesArr.push(existingSeries)
             } else {
               // 创建新的series
@@ -134,7 +176,8 @@ watch(
           })
         }
       }
-      option.value = props.chartConfig.option
+      // 计算属性会自动应用自定义颜色
+      option.value = { ...props.chartConfig.option }
     } catch (error) {
       console.log(error)
       option.value = props.chartConfig.option
@@ -143,6 +186,31 @@ watch(
   {
     immediate: true,
     deep: false
+  }
+)
+
+// 创建一个计算属性来处理最终渲染的option
+const renderOption = computed(() => {
+  const baseOption = mergeTheme(props.chartConfig.option, props.themeSetting, includes)
+
+  // 应用自定义颜色到渲染用的option副本
+  if (baseOption.series && Array.isArray(baseOption.series)) {
+    const clonedSeries = cloneDeep(baseOption.series)
+    applyCustomColors(clonedSeries)
+    baseOption.series = clonedSeries
+  }
+
+  return baseOption
+})
+
+// 使用计算属性替代直接赋值
+watch(
+  renderOption,
+  (newOption) => {
+    option.value = newOption
+  },
+  {
+    immediate: true
   }
 )
 
