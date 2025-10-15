@@ -43,7 +43,7 @@ export const createSeriesItem = (colorIndex: number) => {
       enabled: false,
       lineColor: '',
       gradientStart: '',
-      gradientEnd: 'rgba(0,0,0,0)'
+      gradientEnd: ''
     }
   }
 }

@@ -124,7 +124,7 @@ const ensureCustomColorConfig = (series: any[]) => {
         enabled: false,
         lineColor: '',
         gradientStart: '',
-        gradientEnd: 'rgba(0,0,0,0)'
+        gradientEnd: ''
       }
     }
   })
