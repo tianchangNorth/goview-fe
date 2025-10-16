@@ -149,6 +149,9 @@ const len = 3; // 轮播部分提示
 })()
 `
 
+// 导入数据驱动的示例
+import { dataDrivenExamples } from './dataDrivenExamples'
+
 export const templateList = [
   {
     description: '获取当前组件实例',
@@ -185,5 +188,7 @@ export const templateList = [
   {
     description: '修改【地图】圆点，新增提示自动轮播',
     code: editMapPointString
-  }
+  },
+  // 数据驱动的示例
+  ...dataDrivenExamples
 ]
