@@ -1,5 +1,5 @@
 import { Router } from 'vue-router';
-import { PageEnum, PreviewEnum } from '@/enums/pageEnum'
+import { PageEnum, PreviewEnum, PublishEnum } from '@/enums/pageEnum'
 import { loginCheck } from '@/utils'
 
 // 路由白名单
@@ -7,7 +7,9 @@ const routerAllowList = [
   // 登录
   PageEnum.BASE_LOGIN_NAME,
   // 预览
-  PreviewEnum.CHART_PREVIEW_NAME
+  PreviewEnum.CHART_PREVIEW_NAME,
+  // 发布
+  PublishEnum.CHART_PUBLISHED_NAME
 ]
 
 export function createRouterGuards(router: Router) {
