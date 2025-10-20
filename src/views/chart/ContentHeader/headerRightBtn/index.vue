@@ -22,7 +22,7 @@
 
       <n-list-item>
         <n-space :size="10">
-          <n-alert :show-icon="false" :title="release ? '发布地址：' : '预览地址：'" type="success">
+          <n-alert :show-icon="false" title="发布地址：" type="success">
             {{ previewPathRef }}
           </n-alert>
           <n-space vertical>
@@ -77,13 +77,12 @@ const previewPathRef = computed(() => {
   if (!projectId) return ''
 
   const { origin } = document.location
-  const path = release.value
-    ? fetchPathByName(PublishEnum.CHART_PUBLISHED_NAME, 'href')
-    : fetchPathByName(PreviewEnum.CHART_PREVIEW_NAME, 'href')
+  // 始终使用发布地址
+  const path = fetchPathByName(PublishEnum.CHART_PUBLISHED_NAME, 'href')
 
   if (!path) return ''
 
-  // 直接使用完整的路径，不重复拼接pathname
+  // 构建完整的URL
   return `${origin}${path}/${projectId}`
 })
 

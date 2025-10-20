@@ -6,7 +6,7 @@ export const fetchAllowList = [
   `${ModuleTypeEnum.SYSTEM}/login`,
   // 获取 OSS 接口
   `${ModuleTypeEnum.SYSTEM}/getOssInfo`,
-  // 预览获取数据
+  // 预览获取数据（智能认证，无需白名单）
   // `${ModuleTypeEnum.PROJECT}/getData`,
 ]
 

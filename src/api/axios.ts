@@ -27,6 +27,17 @@ axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // 白名单校验
     if (includes(fetchAllowList, config.url)) return config
+
+    // getData 接口智能认证：如果有 token 则携带，没有则不携带
+    if (config.url === `${ModuleTypeEnum.PROJECT}/getData`) {
+      const info = getLocalStorage(StorageEnum.GO_SYSTEM_STORE)
+      if (info) {
+        const userInfo = info[SystemStoreEnum.USER_INFO]
+        config.headers[userInfo[SystemStoreUserInfoEnum.TOKEN_NAME] || 'token'] = userInfo[SystemStoreUserInfoEnum.USER_TOKEN] || ''
+      }
+      return config
+    }
+
     // 获取 token
     const info = getLocalStorage(StorageEnum.GO_SYSTEM_STORE)
     // 重新登录
