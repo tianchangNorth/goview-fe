@@ -7,14 +7,14 @@
     <SettingItemBox name="稀疏X轴">
       <SettingItem name="启用">
         <n-space>
-          <n-switch v-model:value="optionData.xAxis.sparseAxis.enabled" size="small" />
+          <n-switch v-model:value="sparseAxisConfig.enabled" size="small" />
           <n-text>启用稀疏X轴</n-text>
         </n-space>
       </SettingItem>
-      <template v-if="optionData.xAxis.sparseAxis.enabled">
+      <template v-if="sparseAxisConfig.enabled">
         <SettingItem name="间隔策略">
           <n-select
-            v-model:value="optionData.xAxis.sparseAxis.interval"
+            v-model:value="sparseAxisConfig.interval"
             size="small"
             :options="[
               { label: '自动计算', value: 'auto' },
@@ -27,9 +27,9 @@
             ]"
           />
         </SettingItem>
-        <SettingItem v-if="optionData.xAxis.sparseAxis.interval === 'auto'" name="最大标签数">
+        <SettingItem v-if="sparseAxisConfig.interval === 'auto'" name="最大标签数">
           <n-input-number
-            v-model:value="optionData.xAxis.sparseAxis.maxLabels"
+            v-model:value="sparseAxisConfig.maxLabels"
             :min="1"
             :max="20"
             size="small"
@@ -62,15 +62,15 @@
       </SettingItem>
       <SettingItem name="自定义颜色">
         <n-space>
-          <n-switch v-model:value="item.customColor.enabled" size="small" />
+          <n-switch v-model:value="getCustomColorConfig(item).enabled" size="small" />
           <n-text>启用自定义颜色</n-text>
         </n-space>
       </SettingItem>
-      <SettingItem v-if="item.customColor.enabled" name="线条颜色">
-        <n-color-picker size="small" :modes="['hex']" v-model:value="item.customColor.lineColor" placeholder="线条颜色"></n-color-picker>
+      <SettingItem v-if="getCustomColorConfig(item).enabled" name="线条颜色">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="getCustomColorConfig(item).lineColor" placeholder="线条颜色"></n-color-picker>
       </SettingItem>
-      <SettingItem v-if="item.customColor.enabled" name="实心点颜色">
-        <n-color-picker size="small" :modes="['hex']" v-model:value="item.customColor.itemColor" placeholder="实心点颜色"></n-color-picker>
+      <SettingItem v-if="getCustomColorConfig(item).enabled" name="实心点颜色">
+        <n-color-picker size="small" :modes="['hex']" v-model:value="getCustomColorConfig(item).itemColor" placeholder="实心点颜色"></n-color-picker>
       </SettingItem>
     </SettingItemBox>
     <SettingItemBox name="实心点">
@@ -134,4 +134,35 @@ const props = defineProps({
 const seriesList = computed(() => {
   return props.optionData.series
 })
+
+// 确保稀疏X轴配置存在
+const sparseAxisConfig = computed({
+  get: () => {
+    const xAxis = props.optionData.xAxis as any
+    if (!xAxis.sparseAxis) {
+      xAxis.sparseAxis = {
+        enabled: false,
+        maxLabels: 5,
+        interval: 'auto'
+      }
+    }
+    return xAxis.sparseAxis
+  },
+  set: (value) => {
+    const xAxis = props.optionData.xAxis as any
+    xAxis.sparseAxis = value
+  }
+})
+
+// 确保自定义颜色配置存在
+const getCustomColorConfig = (item: any) => {
+  if (!item.customColor) {
+    item.customColor = {
+      enabled: false,
+      lineColor: '',
+      itemColor: ''
+    }
+  }
+  return item.customColor
+}
 </script>
