@@ -320,6 +320,12 @@ $carousel-image-height: 60vh;
         text-align: center;
         height: $account-img-height;
         margin-bottom: 20px;
+
+        &-logo {
+          object-fit: cover;
+          width: 180px;
+          height: 180px;
+        }
       }
     }
   }
