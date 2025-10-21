@@ -43,7 +43,17 @@ export const option = {
   },
   xAxis: {
     show: true,
-    type: 'category'
+    type: 'category',
+    // 稀疏X轴配置
+    axisLabel: {
+      interval: 'auto' // 自动计算显示间隔
+    },
+    // 稀疏X轴控制配置
+    sparseAxis: {
+      enabled: false,
+      maxLabels: 5, // 最大显示标签数量
+      interval: 'auto' // 间隔策略，auto/0/1/2...数字
+    }
   },
   yAxis: {
     show: true,

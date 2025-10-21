@@ -70,6 +70,36 @@ const option = computed(() => {
     })
   }
 
+  // 处理稀疏X轴配置
+  if (mergedOption.xAxis && mergedOption.xAxis.sparseAxis?.enabled) {
+    const sparseConfig = mergedOption.xAxis.sparseAxis
+    const xAxisData = mergedOption.dataset?.source?.map((item: any) => item[0]) || []
+
+    if (xAxisData.length > 0) {
+      let interval: string | number = 'auto'
+
+      if (sparseConfig.interval !== 'auto') {
+        interval = parseInt(sparseConfig.interval) as number
+      } else {
+        // 自动计算间隔以达到最大显示标签数
+        const totalLabels = xAxisData.length
+        const maxLabels = sparseConfig.maxLabels || 5
+
+        if (totalLabels > maxLabels) {
+          interval = Math.ceil(totalLabels / maxLabels)
+        } else {
+          interval = 0 // 显示所有标签
+        }
+      }
+
+      // 应用稀疏配置
+      if (!mergedOption.xAxis.axisLabel) {
+        mergedOption.xAxis.axisLabel = {}
+      }
+      mergedOption.xAxis.axisLabel.interval = interval
+    }
+  }
+
   return mergedOption
 })
 

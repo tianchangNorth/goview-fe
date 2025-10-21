@@ -1,6 +1,45 @@
 <template>
   <!-- Echarts 全局设置 -->
   <global-setting :optionData="optionData"></global-setting>
+
+  <!-- X轴设置 -->
+  <CollapseItem name="X轴设置" :expanded="true">
+    <SettingItemBox name="稀疏X轴">
+      <SettingItem name="启用">
+        <n-space>
+          <n-switch v-model:value="optionData.xAxis.sparseAxis.enabled" size="small" />
+          <n-text>启用稀疏X轴</n-text>
+        </n-space>
+      </SettingItem>
+      <template v-if="optionData.xAxis.sparseAxis.enabled">
+        <SettingItem name="间隔策略">
+          <n-select
+            v-model:value="optionData.xAxis.sparseAxis.interval"
+            size="small"
+            :options="[
+              { label: '自动计算', value: 'auto' },
+              { label: '显示所有', value: '0' },
+              { label: '每隔1个显示', value: '1' },
+              { label: '每隔2个显示', value: '2' },
+              { label: '每隔3个显示', value: '3' },
+              { label: '每隔4个显示', value: '4' },
+              { label: '每隔5个显示', value: '5' }
+            ]"
+          />
+        </SettingItem>
+        <SettingItem v-if="optionData.xAxis.sparseAxis.interval === 'auto'" name="最大标签数">
+          <n-input-number
+            v-model:value="optionData.xAxis.sparseAxis.maxLabels"
+            :min="1"
+            :max="20"
+            size="small"
+            placeholder="最大显示标签数"
+          ></n-input-number>
+        </SettingItem>
+      </template>
+    </SettingItemBox>
+  </CollapseItem>
+
   <CollapseItem v-for="(item, index) in seriesList" :key="index" :name="`折线图-${index + 1}`" :expanded="true">
     <SettingItemBox name="线条">
       <SettingItem name="平滑">
