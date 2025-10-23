@@ -17,6 +17,10 @@ export const seriesItem = {
   itemStyle: {
     color: null,
     borderRadius: 0
+  },
+  showBackground: false,
+  backgroundStyle: {
+    color: 'rgba(180, 180, 180, 0.2)'
   }
 }
 export const option = {
@@ -30,7 +34,7 @@ export const option = {
   },
   xAxis: {
     show: true,
-    type: 'value'
+    type: 'value',
   },
   yAxis: {
     show: true,

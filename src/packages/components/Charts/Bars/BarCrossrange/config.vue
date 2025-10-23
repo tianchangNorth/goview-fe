@@ -1,7 +1,7 @@
 <template>
   <!-- Echarts 全局设置 --> 
   <global-setting :optionData="optionData"></global-setting>
-  <CollapseItem v-for="(item, index) in seriesList" :key="index" :name="`柱状图-${index+1}`" :expanded="true">
+  <CollapseItem v-for="(item, index) in seriesList" :key="index" :name="`柱状图-${index + 1}`" :expanded="true">
     <SettingItemBox name="图形">
       <SettingItem name="宽度">
           <n-input-number
@@ -20,7 +20,7 @@
        ></n-input-number>
       </SettingItem>
     </SettingItemBox>
-        <setting-item-box name="标签">
+    <setting-item-box name="标签">
       <setting-item>
         <n-space>
           <n-switch v-model:value="item.label.show" size="small" />
@@ -53,6 +53,22 @@
         />
       </setting-item>
     </setting-item-box>
+    <SettingItemBox name="背景色">
+      <setting-item>
+        <n-space>
+          <n-switch v-model:value="item.showBackground" size="small" />
+          <n-text>展示背景色</n-text>
+        </n-space>
+      </setting-item>
+
+      <setting-item name="颜色">
+        <n-color-picker
+          size="small"
+          :modes="['hex']"
+          v-model:value="item.backgroundStyle.color"
+        ></n-color-picker>
+      </setting-item>
+    </SettingItemBox>
   </CollapseItem>
 </template>
 
