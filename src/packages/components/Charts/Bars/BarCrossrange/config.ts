@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import dataJson from './data.json'
 
 export const includes = ['legend', 'xAxis', 'yAxis', 'grid']
-export const seriesItem = {
+export const seriesItem: any = {
   type: 'bar',
   barWidth: null,
   label: {

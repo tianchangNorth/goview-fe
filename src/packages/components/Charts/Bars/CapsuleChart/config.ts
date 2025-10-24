@@ -14,7 +14,9 @@ export const option = {
   valueFontSize: 16,
   paddingRight: 50,
   paddingLeft: 50,
-  showValue: true
+  showValue: true,
+  backgroundColor: 'rgba(180, 180, 180, 0.1)', // 背景色自定义
+  textGap: 20 // 文本和柱子之间的间隔
 }
 
 export default class Config extends PublicConfigClass implements CreateComponentType {

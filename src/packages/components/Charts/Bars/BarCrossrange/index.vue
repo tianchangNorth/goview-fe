@@ -54,15 +54,47 @@ const option = computed(() => {
 // dataset 无法变更条数的补丁
 watch(
   () => props.chartConfig.option.dataset,
-  (newData: { dimensions: any }, oldData) => {
+  (newData: { dimensions: any, source: any[] }) => {
     try {
       if (!isObject(newData) || !('dimensions' in newData)) return
-      if (Array.isArray(newData?.dimensions)) {
-        const seriesArr = []
-        for (let i = 0; i < newData.dimensions.length - 1; i++) {
-          seriesArr.push(cloneDeep(seriesItem))
+
+      // 支持单个柱子颜色自定义
+      if (Array.isArray(newData?.source) && newData.source.length > 0) {
+        const seriesArr: any[] = []
+
+        // 处理每个数据系列
+        for (let i = 1; i < newData.dimensions.length; i++) {
+          const itemSeries = cloneDeep(seriesItem)
+
+          // 将数据转换为支持单个颜色的格式
+          const seriesData = newData.source.map((item: any) => {
+            const value = item[newData.dimensions[i]]
+            const colorKey = `${newData.dimensions[i]}Color`
+            const customColor = item[colorKey]
+
+            if (customColor) {
+              return {
+                value: value,
+                itemStyle: {
+                  color: customColor
+                }
+              }
+            }
+            return value
+          })
+
+          itemSeries.data = seriesData
+          itemSeries.name = newData.dimensions[i]
+          seriesArr.push(itemSeries)
         }
-        replaceMergeArr.value = ['series']
+
+        // 更新y轴数据
+        const categoryNames = newData.source.map(item => item[newData.dimensions[0]])
+        if (props.chartConfig.option.yAxis) {
+          props.chartConfig.option.yAxis.data = categoryNames
+        }
+
+        replaceMergeArr.value = ['series', 'yAxis']
         props.chartConfig.option.series = seriesArr
         nextTick(() => {
           replaceMergeArr.value = []

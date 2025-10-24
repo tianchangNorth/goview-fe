@@ -28,9 +28,8 @@
       >
         <div
           class="capsule-item-column"
-          :style="`width: ${capsule * 100}%; background-color: ${
-            state.mergedConfig.colors[index % state.mergedConfig.colors.length]
-          };height:calc(100% - ${2}px);`"
+          :style="`width: ${capsule * 100}%; background-color: ${state.mergedConfig.colors[index % state.mergedConfig.colors.length]
+            };height:calc(100% - ${2}px);`"
         >
           <div v-if="state.mergedConfig.showValue" class="capsule-item-value">
             {{ state.capsuleValue[index] }}
@@ -52,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch, reactive, PropType } from 'vue'
+import { onMounted, watch, reactive, computed, PropType } from 'vue'
 import { useChartDataFetch } from '@/hooks'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
 import config, { option } from './config'
@@ -140,13 +139,13 @@ const calcCapsuleLengthAndLabelData = (dataset: any) => {
 
     state.capsuleValue = capsuleValue
 
-    state.capsuleLength = capsuleValue.map((v: any) => (maxValue ? v / maxValue : 0))
-
-    const oneFifth = maxValue / 5
-
-    const labelData = Array.from(new Set(new Array(6).fill(0).map((v, i) => Math.ceil(i * oneFifth))))
-
+    // 生成规范刻度
+    const labelData = generateNiceScale(maxValue, 6)
     state.labelData = labelData
+
+    // 使用刻度最大值而不是数据最大值来计算柱状图长度
+    const scaleMaxValue = Math.max(...labelData)
+    state.capsuleLength = capsuleValue.map((v: any) => (scaleMaxValue ? v / scaleMaxValue : 0))
   } catch (error) {
     console.warn(error)
   }
@@ -155,6 +154,60 @@ const calcCapsuleLengthAndLabelData = (dataset: any) => {
 const numberSizeHandle = (val: string | number) => {
   return val + 'px'
 }
+
+// 生成规范的刻度值
+const generateNiceScale = (maxValue: number, tickCount: number = 6) => {
+  if (maxValue === 0) return Array(tickCount).fill(0)
+
+  // 计算合适的刻度间隔
+  const range = maxValue
+  const roughStep = range / (tickCount - 1)
+
+  // 规范化刻度间隔到 1, 2, 5, 10, 20, 50, 100 等标准值
+  const exponent = Math.floor(Math.log10(roughStep))
+  const fraction = roughStep / Math.pow(10, exponent)
+
+  let niceStep
+  if (fraction <= 1) {
+    niceStep = Math.pow(10, exponent)
+  } else if (fraction <= 2) {
+    niceStep = 2 * Math.pow(10, exponent)
+  } else if (fraction <= 5) {
+    niceStep = 5 * Math.pow(10, exponent)
+  } else {
+    niceStep = 10 * Math.pow(10, exponent)
+  }
+
+  // 计算起始值（调整为0或niceStep的整数倍）
+  const niceMin = 0
+  const niceMax = Math.ceil(maxValue / niceStep) * niceStep
+
+  // 生成刻度数组
+  const ticks = []
+  for (let i = 0; i < tickCount; i++) {
+    const value = niceMin + (i * niceStep)
+    if (value <= niceMax) {
+      ticks.push(Math.round(value))
+    }
+  }
+
+  // 确保最大值被包含
+  if (ticks[ticks.length - 1] < maxValue) {
+    ticks.push(niceMax)
+  }
+
+  return ticks
+}
+
+// 安全地获取背景色
+const backgroundColor = computed(() => {
+  return state.mergedConfig?.backgroundColor || 'rgba(180, 180, 180, 0.1)'
+})
+
+// 安全地获取文本间隔
+const textGap = computed(() => {
+  return (state.mergedConfig?.textGap || 20) + 'px'
+})
 
 onMounted(() => {
   calcData(props.chartConfig.option)
@@ -183,8 +236,9 @@ useChartDataFetch(props.chartConfig, useChartEditStore, (newData: any) => {
     box-sizing: border-box;
     padding-right: 10px;
     text-align: right;
-    > div:not(:last-child) {
-      margin: 5px 0;
+
+    >div:not(:last-child) {
+      margin: 5px v-bind('textGap');
     }
   }
 
@@ -196,16 +250,14 @@ useChartDataFetch(props.chartConfig, useChartEditStore, (newData: any) => {
   }
 
   .capsule-item {
-    box-shadow: 0 0 3px #999;
     height: 10px;
     margin: 5px 0px;
-    border-radius: 5px;
+    background-color: v-bind('state.mergedConfig?.backgroundColor || "rgba(180, 180, 180, 0.1)"');
 
     .capsule-item-column {
       position: relative;
       height: 8px;
       margin-top: 1px;
-      border-radius: 5px;
       transition: all 0.3s;
       display: flex;
       justify-content: flex-end;

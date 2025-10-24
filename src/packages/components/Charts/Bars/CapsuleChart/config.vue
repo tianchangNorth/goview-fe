@@ -10,6 +10,9 @@
       <setting-item name="右侧边距">
         <n-input-number v-model:value="optionData.paddingRight" :min="10" :step="1" size="small"></n-input-number>
       </setting-item>
+      <setting-item name="文本间隔(px)">
+        <n-input-number v-model:value="optionData.textGap" :min="0" :step="1" size="small"></n-input-number>
+      </setting-item>
       <setting-item name="每块高度(px)">
         <n-input-number v-model:value="optionData.itemHeight" :min="0" :step="1" size="small"></n-input-number>
       </setting-item>
@@ -32,6 +35,9 @@
     <SettingItemBox name="颜色">
       <setting-item v-for="(item, index) in optionData.colors" :key="index" :name="`颜色${index}`">
         <n-color-picker v-model:value="optionData.colors[index]" size="small" :modes="['hex']"></n-color-picker>
+      </setting-item>
+      <setting-item name="背景色">
+        <n-color-picker v-model:value="optionData.backgroundColor" size="small" :modes="['hex']"></n-color-picker>
       </setting-item>
     </SettingItemBox>
   </collapse-item>
